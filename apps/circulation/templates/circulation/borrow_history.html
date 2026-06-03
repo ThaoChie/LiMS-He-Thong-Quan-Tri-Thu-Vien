@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Lịch sử Mượn - LiMS{% endblock %}
+{% block page_title %}Lịch sử Mượn sách{% endblock %}
+
+{% block content %}
+<div class="filter-pills mb-3">
+    <a href="?status=" class="filter-pill {% if not status_filter %}active{% endif %}">Tất cả</a>
+    <a href="?status=pending" class="filter-pill {% if status_filter == 'pending' %}active{% endif %}">Chờ duyệt</a>
+    <a href="?status=borrowed" class="filter-pill {% if status_filter == 'borrowed' %}active{% endif %}">Đang mượn</a>
+    <a href="?status=returned" class="filter-pill {% if status_filter == 'returned' %}active{% endif %}">Đã trả</a>
+    <a href="?status=overdue" class="filter-pill {% if status_filter == 'overdue' %}active{% endif %}">Quá hạn</a>
+    <a href="?status=cancelled" class="filter-pill {% if status_filter == 'cancelled' %}active{% endif %}">Đã hủy</a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead><tr><th>Sách</th><th>Ngày mượn</th><th>Hạn trả</th><th>Ngày trả</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                <tbody>
+                {% for record in page_obj %}
+                <tr class="{% if record.is_overdue %}table-danger{% endif %}">
+                    <td><a href="{% url 'catalog:book_detail' record.book.pk %}" class="fw-semibold">{{ record.book.title|truncatechars:40 }}</a></td>
+                    <td>{{ record.borrow_date|date:"d/m/Y" }}</td>
+                    <td>{{ record.due_date|date:"d/m/Y" }}</td>
+                    <td>{{ record.return_date|date:"d/m/Y"|default:"-" }}</td>
+                    <td><span class="badge badge-{{ record.status }}">{{ record.get_status_display }}</span></td>
+                    <td>
+                        {% if record.status == 'pending' %}
+                        <form method="post" action="{% url 'circulation:borrow_cancel' record.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Hủy yêu cầu"><i class="bi bi-x-lg"></i> Hủy</button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">Chưa có lịch sử mượn sách.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-3 d-flex justify-content-center">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}">‹</a></li>{% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}&status={{ status_filter }}">{{ num }}</a></li>
+        {% endfor %}
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}">›</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

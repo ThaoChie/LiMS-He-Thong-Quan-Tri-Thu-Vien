@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}{{ book.title }} - LiMS{% endblock %}
+{% block page_title %}Chi tiết Sách{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-4">
+            <div class="col-md-4">
+                {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-fluid rounded" style="width:100%;max-height:400px;object-fit:cover;">
+                {% else %}
+                <div class="book-cover-placeholder bg-1 rounded" style="height:350px;border-radius:var(--border-radius);">
+                    <i class="bi bi-book" style="font-size:5rem;"></i>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-2">{{ book.title }}</h2>
+                <p class="text-muted mb-3">
+                    <i class="bi bi-person me-1"></i> {{ book.authors.all|join:", "|default:"Không rõ tác giả" }}
+                </p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge badge-{{ book.status }} px-3 py-2">{{ book.get_status_display }}</span>
+                    {% if book.category %}<span class="badge bg-light text-dark border px-3 py-2">{{ book.category.name }}</span>{% endif %}
+                </div>
+                <div class="row g-3 mb-3" style="font-size:0.9rem;">
+                    {% if book.publisher %}<div class="col-sm-6"><strong>NXB:</strong> {{ book.publisher.name }}</div>{% endif %}
+                    {% if book.publication_year %}<div class="col-sm-6"><strong>Năm XB:</strong> {{ book.publication_year }}</div>{% endif %}
+                    {% if book.isbn %}<div class="col-sm-6"><strong>ISBN:</strong> {{ book.isbn }}</div>{% endif %}
+                    <div class="col-sm-6"><strong>Có sẵn:</strong> {{ book.available_copies }}/{{ book.total_copies }} bản</div>
+                </div>
+                {% if book.description %}<p class="text-muted">{{ book.description }}</p>{% endif %}
+
+                {% if avg_rating %}
+                <div class="mb-3">
+                    <span class="star-display">
+                        {% for i in "12345" %}
+                        <i class="bi bi-star{% if forloop.counter <= avg_rating|floatformat:0|add:0 %}-fill{% endif %}"></i>
+                        {% endfor %}
+                    </span>
+                    <span class="text-muted ms-1">({{ avg_rating|floatformat:1 }}/5 - {{ reviews|length }} đánh giá)</span>
+                </div>
+                {% endif %}
+
+                <div class="d-flex flex-wrap gap-2">
+                    {% if book.is_available %}
+                    <a href="{% url 'circulation:borrow_request' book.pk %}" class="btn btn-primary"><i class="bi bi-arrow-right-circle me-1"></i> Mượn sách</a>
+                    {% else %}
+                    <a href="{% url 'circulation:reserve_book' book.pk %}" class="btn btn-outline-primary"><i class="bi bi-bookmark me-1"></i> Đặt trước</a>
+                    {% endif %}
+                    {% if user.is_authenticated and user_has_borrowed and not user_has_reviewed %}
+                    <a href="{% url 'reviews:review_create' book.pk %}" class="btn btn-outline-warning"><i class="bi bi-star me-1"></i> Viết đánh giá</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews Section -->
+<div class="card">
+    <div class="card-header"><i class="bi bi-chat-quote me-2"></i>Đánh giá ({{ reviews|length }})</div>
+    <div class="card-body">
+        {% for review in reviews %}
+        <div class="d-flex gap-3 {% if not forloop.last %}mb-3 pb-3 border-bottom{% endif %}">
+            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#818CF8,#4F46E5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;flex-shrink:0;">
+                {{ review.user.username|make_list|first|upper }}
+            </div>
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ review.user.username }}</strong>
+                        <span class="star-display ms-2">
+                            {% for i in "12345" %}
+                            <i class="bi bi-star{% if forloop.counter <= review.rating %}-fill{% endif %}"></i>
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <small class="text-muted">{{ review.created_at|date:"d/m/Y" }}</small>
+                </div>
+                {% if review.comment %}<p class="mb-0 mt-1 text-muted">{{ review.comment }}</p>{% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-chat-dots" style="font-size:2rem;"></i>
+            <p class="mt-2">Chưa có đánh giá nào.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
