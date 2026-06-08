@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}LiMS - Trang chủ{% endblock %}
+{% block page_title %}Trang chủ{% endblock %}
+
+{% block content %}
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-gradient-blue">
+            <div class="stat-icon"><i class="bi bi-book"></i></div>
+            <div class="stat-number">{{ total_books }}</div>
+            <div class="stat-label">Tổng số sách</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-gradient-green">
+            <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+            <div class="stat-number">{{ available_books }}</div>
+            <div class="stat-label">Sách có sẵn</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-gradient-orange">
+            <div class="stat-icon"><i class="bi bi-arrow-repeat"></i></div>
+            <div class="stat-number">{{ active_borrows }}</div>
+            <div class="stat-label">Đang mượn</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-gradient-purple">
+            <div class="stat-icon"><i class="bi bi-bookmark"></i></div>
+            <div class="stat-number">{{ active_reservations }}</div>
+            <div class="stat-label">Đặt trước</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h6 class="fw-bold mb-3"><i class="bi bi-lightning-charge me-2"></i>Thao tác nhanh</h6>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'catalog:book_search' %}" class="btn btn-primary"><i class="bi bi-search me-1"></i> Tìm sách</a>
+            <a href="{% url 'catalog:book_list' %}" class="btn btn-outline-primary"><i class="bi bi-book me-1"></i> Xem danh sách</a>
+            <a href="{% url 'proposals:proposal_create' %}" class="btn btn-outline-primary"><i class="bi bi-lightbulb me-1"></i> Đề xuất sách</a>
+            <a href="{% url 'circulation:borrow_history' %}" class="btn btn-outline-primary"><i class="bi bi-clock-history me-1"></i> Lịch sử mượn</a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Books -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-clock me-2"></i>Sách mới nhất</span>
+        <a href="{% url 'catalog:book_list' %}" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+    </div>
+    <div class="card-body">
+        {% if recent_books %}
+        <div class="row g-3">
+            {% for book in recent_books %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card book-card">
+                    <div class="book-cover">
+                        {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                        {% else %}
+                        <div class="book-cover-placeholder bg-{{ forloop.counter|divisibleby:6|yesno:'6,0' }}{% if not forloop.counter|divisibleby:6 %}{{ forloop.counter|add:0 }}{% endif %}">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="book-title">{{ book.title }}</div>
+                        <div class="book-author">{{ book.authors.all|join:", " }}</div>
+                        <div class="book-meta">
+                            <span class="badge badge-{{ book.status }}">{{ book.get_status_display }}</span>
+                            <small class="text-muted">{{ book.available_copies }}/{{ book.total_copies }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h5>Chưa có sách nào</h5>
+            <p>Thư viện đang được cập nhật.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
