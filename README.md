@@ -73,8 +73,9 @@ LiMS được xây dựng theo mô hình **Client–Server** sử dụng Django 
 
 ## 🏗 Kiến trúc hệ thống
 
-```
+```mermaid
 graph TD
+
     subgraph Docker_Network
         WEB["lims_web<br/>Django<br/>:8000"]
         DB["lims_db<br/>MySQL 8.0<br/>:3306"]
