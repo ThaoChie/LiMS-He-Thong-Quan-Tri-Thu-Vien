@@ -74,21 +74,18 @@ LiMS được xây dựng theo mô hình **Client–Server** sử dụng Django 
 ## 🏗 Kiến trúc hệ thống
 
 ```
-┌──────────────────────────────────────────────────────┐
-│                    Docker Network                    │
-│                                                      │
-│  ┌──────────┐    ┌──────────┐    ┌───────────────┐   │
-│  │ lims_web │    │ lims_db  │    │  lims_redis   │   │
-│  │ Django   │◄──►│ MySQL8.0 │    │  Redis Alpine │   │
-│  │ :8000    │    │  :3306   │    │    :6379      │   │
-│  └────┬─────┘    └──────────┘    └───────┬───────┘   │
-│       │                                  │           │
-│  ┌────▼──────┐                  ┌────────▼───────┐   │
-│  │lims_celery│                  │ lims_chromadb  │   │
-│  │  Worker   │                  │  ChromaDB      │   │
-│  │           │                  │    :8001       │   │
-│  └───────────┘                  └────────────────┘   │
-└──────────────────────────────────────────────────────┘
+graph TD
+    subgraph Docker_Network
+        WEB["lims_web<br/>Django<br/>:8000"]
+        DB["lims_db<br/>MySQL 8.0<br/>:3306"]
+        REDIS["lims_redis<br/>Redis Alpine<br/>:6379"]
+        CELERY["lims_celery<br/>Worker"]
+        CHROMA["lims_chromadb<br/>ChromaDB<br/>:8001"]
+
+        WEB <--> DB
+        WEB --> CELERY
+        REDIS --> CHROMA
+    end
 ```
 
 ---
