@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Quản lý Thể loại - LiMS{% endblock %}
+{% block page_title %}Quản lý Thể loại{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-plus-circle me-2"></i>Thêm thể loại</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">{{ form.name }}</div>
+                    <div class="mb-3">{{ form.description }}</div>
+                    <button class="btn btn-primary w-100"><i class="bi bi-plus-lg me-1"></i> Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-tags me-2"></i>Danh sách thể loại</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead><tr><th>#</th><th>Tên</th><th>Mô tả</th><th>Hành động</th></tr></thead>
+                    <tbody>
+                    {% for cat in page_obj %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="fw-semibold">{{ cat.name }}</td>
+                        <td class="text-muted">{{ cat.description|default:"-"|truncatechars:50 }}</td>
+                        <td>
+                            <a href="{% url 'catalog:category_edit' cat.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                            <form method="post" action="{% url 'catalog:category_delete' cat.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger" data-confirm="Xóa thể loại này?"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-3">Chưa có thể loại nào.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if page_obj %}
+        <nav class="mt-3 d-flex justify-content-center">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">«</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">›</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">»</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

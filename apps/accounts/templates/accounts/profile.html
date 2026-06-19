@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Hồ sơ - LiMS{% endblock %}
+{% block page_title %}Hồ sơ cá nhân{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card text-center">
+            <div class="card-body py-4">
+                <div class="mx-auto mb-3" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#818CF8);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;font-weight:700;">
+                    {{ user.username|make_list|first|upper }}
+                </div>
+                <h5 class="fw-bold">{{ user.username }}</h5>
+                <span class="badge badge-role-{{ user.role }} px-3 py-1">{{ user.get_role_display }}</span>
+                <div class="mt-3 text-muted" style="font-size:0.85rem;">
+                    <div><i class="bi bi-envelope me-1"></i> {{ user.email|default:"Chưa cập nhật" }}</div>
+                    <div><i class="bi bi-telephone me-1"></i> {{ user.phone_number|default:"Chưa cập nhật" }}</div>
+                    <div><i class="bi bi-calendar me-1"></i> Tham gia: {{ user.created_at|date:"d/m/Y" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-pencil-square me-2"></i>Chỉnh sửa hồ sơ</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Tên hiển thị (Biệt danh)</label>{{ form.username }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Họ</label>{{ form.last_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tên</label>{{ form.first_name }}
+                        </div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Email</label>{{ form.email }}</div>
+                    <div class="mb-3"><label class="form-label">Số điện thoại</label>{{ form.phone_number }}</div>
+                    <div class="mb-3"><label class="form-label">Địa chỉ</label>{{ form.address }}</div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Lưu thay đổi</button>
+                        <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-secondary"><i class="bi bi-shield-lock me-1"></i> Đổi mật khẩu</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

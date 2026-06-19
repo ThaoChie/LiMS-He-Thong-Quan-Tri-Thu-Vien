@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Tạo Đề xuất - LiMS{% endblock %}
+{% block page_title %}Tạo Đề xuất Sách mới{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3"><label class="form-label">Tên sách <span class="text-danger">*</span></label>{{ form.title }}</div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Tác giả</label>{{ form.author_name }}</div>
+                        <div class="col-md-6 mb-3"><label class="form-label">ISBN</label>{{ form.isbn }}</div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Lý do đề xuất <span class="text-danger">*</span></label>{{ form.reason }}</div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-send me-1"></i> Gửi đề xuất</button>
+                        <a href="{% url 'proposals:proposal_list' %}" class="btn btn-outline-secondary">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

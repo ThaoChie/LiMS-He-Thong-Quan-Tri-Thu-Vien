@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Chi tiết Đề xuất - LiMS{% endblock %}
+{% block page_title %}Chi tiết Đề xuất{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h4 class="fw-bold mb-0">{{ proposal.title }}</h4>
+                    <span class="badge badge-{{ proposal.status }} px-3 py-2">{{ proposal.get_status_display }}</span>
+                </div>
+                <div class="row g-3 mb-3" style="font-size:0.9rem;">
+                    <div class="col-sm-6"><strong>Tác giả:</strong> {{ proposal.author_name|default:"Không rõ" }}</div>
+                    <div class="col-sm-6"><strong>ISBN:</strong> {{ proposal.isbn|default:"Không có" }}</div>
+                    <div class="col-sm-6"><strong>Người đề xuất:</strong> {{ proposal.user.username }}</div>
+                    <div class="col-sm-6"><strong>Ngày tạo:</strong> {{ proposal.created_at|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="mb-3">
+                    <strong>Lý do:</strong>
+                    <p class="mt-1 text-muted">{{ proposal.reason }}</p>
+                </div>
+                {% if proposal.admin_notes %}
+                <div class="alert alert-info">
+                    <strong><i class="bi bi-chat-dots me-1"></i> Phản hồi:</strong>
+                    <p class="mb-0 mt-1">{{ proposal.admin_notes }}</p>
+                </div>
+                {% endif %}
+                <a href="{% url 'proposals:proposal_list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
