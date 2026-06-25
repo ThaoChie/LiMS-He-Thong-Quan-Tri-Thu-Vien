@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - LiMS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-8 mb-3"><label class="form-label">Tên sách <span class="text-danger">*</span></label>{{ form.title }}</div>
+                        <div class="col-md-4 mb-3"><label class="form-label">ISBN</label>{{ form.isbn }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3"><label class="form-label">Thể loại</label>{{ form.category }}</div>
+                        <div class="col-md-4 mb-3"><label class="form-label">Nhà xuất bản</label>{{ form.publisher }}</div>
+                        <div class="col-md-4 mb-3"><label class="form-label">Năm xuất bản</label>{{ form.publication_year }}</div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Tác giả</label><div class="d-flex flex-wrap gap-2">{{ form.authors }}</div></div>
+                    <div class="mb-3"><label class="form-label">Mô tả</label>{{ form.description }}</div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Ảnh bìa</label>{{ form.cover_image }}</div>
+                        <div class="col-md-6 mb-3"><label class="form-label">File PDF</label>{{ form.pdf_file }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3"><label class="form-label">Tổng số bản</label>{{ form.total_copies }}</div>
+                        <div class="col-md-4 mb-3"><label class="form-label">Số bản có sẵn</label>{{ form.available_copies }}</div>
+                        <div class="col-md-4 mb-3"><label class="form-label">Trạng thái</label>{{ form.status }}</div>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> Lưu</button>
+                        <a href="{% url 'catalog:book_manage' %}" class="btn btn-outline-secondary">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

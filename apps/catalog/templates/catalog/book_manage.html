@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Quản lý Sách - LiMS{% endblock %}
+{% block page_title %}Quản lý Sách{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex gap-2 align-items-center">
+            <a href="{% url 'catalog:book_create' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i> Thêm sách</a>
+            <a href="{% url 'catalog:category_manage' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-tags me-1"></i> Thể loại</a>
+        </div>
+        <form method="get" class="d-flex gap-2" style="max-width:300px;">
+            <input type="text" name="q" class="form-control form-control-sm" placeholder="Tìm kiếm..." value="{{ q }}">
+            <button class="btn btn-sm btn-primary"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead><tr><th>#</th><th>Tên sách</th><th>ISBN</th><th>Thể loại</th><th>Trạng thái</th><th>Có sẵn</th><th>Hành động</th></tr></thead>
+                <tbody>
+                {% for book in page_obj %}
+                <tr>
+                    <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                    <td class="fw-semibold"><a href="{% url 'catalog:book_detail' book.pk %}">{{ book.title|truncatechars:50 }}</a></td>
+                    <td><code>{{ book.isbn|default:"-" }}</code></td>
+                    <td>{{ book.category|default:"-" }}</td>
+                    <td><span class="badge badge-{{ book.status }}">{{ book.get_status_display }}</span></td>
+                    <td>{{ book.available_copies }}/{{ book.total_copies }}</td>
+                    <td>
+                        <a href="{% url 'catalog:book_edit' book.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <form method="post" action="{% url 'catalog:book_delete' book.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-danger" data-confirm="Bạn có chắc muốn xóa sách này?"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted py-4">Chưa có sách nào.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+from apps.catalog.models import Book
+from apps.circulation.models import BorrowRecord, Reservation
+
 
 @login_required
 def home_view(request):
-    from apps.catalog.models import Book
-    from apps.circulation.models import BorrowRecord, Reservation
-
     total_books = Book.objects.count()
     available_books = Book.objects.filter(available_copies__gt=0).count()
     active_borrows = BorrowRecord.objects.filter(user=request.user, status='borrowed').count()
