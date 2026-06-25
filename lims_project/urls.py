@@ -14,6 +14,7 @@ urlpatterns = [
     path('proposals/', include('apps.proposals.urls')),
     path('reviews/', include('apps.reviews.urls')),
     path('chatbot/', include('apps.chatbot.urls')),
+    path('dashboard/', include('apps.dashboard.urls')),
 ]
 
 if settings.DEBUG:

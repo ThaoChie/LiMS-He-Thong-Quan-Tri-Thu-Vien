@@ -4,13 +4,13 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Avg
 
-from .models import Book, Category, Author, Publisher
+from .models import Book, Category, Publisher
 from .forms import BookSearchForm, BookForm, CategoryForm, ExcelImportForm
 import openpyxl
 
 
 def book_list_view(request):
-    books = Book.objects.prefetch_related('authors').select_related('category').order_by('-created_at')
+    books = Book.objects.select_related('category').order_by('-created_at')
     cat = request.GET.get('category')
     if cat:
         books = books.filter(category_id=cat)
@@ -23,7 +23,7 @@ def book_list_view(request):
 
 
 def book_detail_view(request, pk):
-    book = get_object_or_404(Book.objects.prefetch_related('authors', 'reviews__user').select_related('category', 'publisher'), pk=pk)
+    book = get_object_or_404(Book.objects.prefetch_related('reviews__user').select_related('category', 'publisher'), pk=pk)
     reviews = book.reviews.all().order_by('-created_at')
     avg_rating = reviews.aggregate(avg=Avg('rating'))['avg']
     user_has_reviewed = False
@@ -40,14 +40,14 @@ def book_detail_view(request, pk):
 
 def book_search_view(request):
     form = BookSearchForm(request.GET)
-    books = Book.objects.prefetch_related('authors').select_related('category')
+    books = Book.objects.select_related('category')
     if form.is_valid():
         q = form.cleaned_data.get('q')
         category = form.cleaned_data.get('category')
         status = form.cleaned_data.get('status')
         if q:
             books = books.filter(
-                Q(title__icontains=q) | Q(authors__name__icontains=q) | Q(isbn__icontains=q)
+                Q(title__icontains=q) | Q(authors__icontains=q) | Q(isbn__icontains=q)
             ).distinct()
         if category:
             books = books.filter(category=category)
@@ -70,7 +70,7 @@ def book_manage_view(request):
     if not _check_staff(request):
         return redirect('home')
     q = request.GET.get('q', '')
-    books = Book.objects.prefetch_related('authors').select_related('category')
+    books = Book.objects.select_related('category')
     if q:
         books = books.filter(Q(title__icontains=q) | Q(isbn__icontains=q))
     paginator = Paginator(books.order_by('-created_at'), 20)
@@ -130,16 +130,11 @@ def book_import_view(request):
                         total_copies=total_copies,
                         available_copies=total_copies,
                         category=category,
-                        publisher=publisher
+                        publisher=publisher,
+                        authors=author_names
                     )
                     
-                    author_objs = []
-                    for a_name in author_names.split(','):
-                        a_name = a_name.strip()
-                        if a_name:
-                            author, _ = Author.objects.get_or_create(name__iexact=a_name, defaults={'name': a_name.title()})
-                            author_objs.append(author)
-                    book.authors.set(author_objs)
+
                     count += 1
                 messages.success(request, f'Đã import thành công {count} cuốn sách!')
                 return redirect('catalog:book_manage')

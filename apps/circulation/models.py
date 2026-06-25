@@ -110,6 +110,11 @@ class FineReceipt(models.Model):
         default='unpaid',
         verbose_name='Trạng thái',
     )
+    payment_method = models.CharField(
+        max_length=20,
+        choices=[('Cash', 'Tiền mặt'), ('Transfer', 'Chuyển khoản')],
+        default='Cash'
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Ngày tạo')
 
     class Meta:
@@ -141,10 +146,11 @@ class FineReceipt(models.Model):
 class Reservation(models.Model):
     """Đặt trước sách."""
     STATUS_CHOICES = [
-        ('active', 'Đang đặt'),
-        ('fulfilled', 'Đã hoàn thành'),
-        ('cancelled', 'Đã hủy'),
-        ('expired', 'Đã hết hạn'),
+        ('Waiting', 'Waiting'),
+        ('Notified', 'Notified'),
+        ('Completed', 'Completed'),
+        ('Expired', 'Expired'),
+        ('Cancelled', 'Cancelled'),
     ]
 
     user = models.ForeignKey(
@@ -164,9 +170,11 @@ class Reservation(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='active',
+        default='Waiting',
         verbose_name='Trạng thái',
     )
+    queue_position = models.PositiveIntegerField(null=True)
+    notified_at = models.DateTimeField(null=True)
 
     class Meta:
         verbose_name = 'Đặt trước'

@@ -30,7 +30,7 @@
                 </div>
                 <div class="card-body">
                     <div class="book-title">{{ book.title }}</div>
-                    <div class="book-author">{{ book.authors.all|join:", "|default:"Không rõ" }}</div>
+                    <div class="book-author">{{ book.authors|default:"Không rõ" }}</div>
                     <div class="book-meta">
                         <span class="badge badge-{{ book.status }}">{{ book.get_status_display }}</span>
                     </div>

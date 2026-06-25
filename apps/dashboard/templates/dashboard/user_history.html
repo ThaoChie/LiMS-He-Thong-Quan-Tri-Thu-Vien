@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User History</title>
+</head>
+<body>
+    <h1>Lịch sử cá nhân</h1>
+    
+    <h2>Sách đang mượn & Quá hạn</h2>
+    <ul>
+        {% for record in borrowed_records %}
+            <li>{{ record.book.title }} - Trạng thái: {{ record.get_status_display }} - Hạn: {{ record.due_date|date:"d/m/Y H:i" }}</li>
+        {% empty %}
+            <li>Không có sách đang mượn.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Lịch sử trả</h2>
+    <ul>
+        {% for record in returned_records %}
+            <li>{{ record.book.title }} - Trả ngày: {{ record.return_date|date:"d/m/Y H:i" }}</li>
+        {% empty %}
+            <li>Không có lịch sử trả.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Đặt trước</h2>
+    <ul>
+        {% for res in reservations %}
+            <li>{{ res.book.title }} - Trạng thái: {{ res.get_status_display }} - Đặt lúc: {{ res.reserved_at|date:"d/m/Y H:i" }}</li>
+        {% empty %}
+            <li>Không có sách đặt trước.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Phiếu phạt</h2>
+    <ul>
+        {% for fine in fines %}
+            <li>{{ fine.get_reason_display }} - {{ fine.amount }}đ - Trạng thái: {{ fine.get_status_display }}</li>
+        {% empty %}
+            <li>Không có phiếu phạt.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

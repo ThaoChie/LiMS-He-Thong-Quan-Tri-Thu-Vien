@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book, Category, Author, Publisher
+from .models import Book, Category, Publisher
 
 
 class BookSearchForm(forms.Form):
@@ -17,11 +17,7 @@ class BookSearchForm(forms.Form):
 
 
 class BookForm(forms.ModelForm):
-    author_names = forms.CharField(
-        label='Tác giả (cách nhau bởi dấu phẩy)',
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VD: Nguyễn Nhật Ánh, Nam Cao'})
-    )
+
     publisher_name = forms.CharField(
         label='Nhà xuất bản',
         required=True,
@@ -30,16 +26,16 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ('title', 'isbn', 'category', 'publication_year', 'description', 
-                  'cover_image', 'pdf_file', 'price', 'total_copies', 'available_copies', 'status')
+        fields = ('title', 'isbn', 'authors', 'category', 'publication_year', 'description', 
+                  'cover_image', 'price', 'total_copies', 'available_copies', 'status')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'isbn': forms.TextInput(attrs={'class': 'form-control'}),
+            'authors': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VD: Nguyễn Nhật Ánh, Nam Cao'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'publication_year': forms.NumberInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'cover_image': forms.FileInput(attrs={'class': 'form-control'}),
-            'pdf_file': forms.FileInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'total_copies': forms.NumberInput(attrs={'class': 'form-control'}),
             'available_copies': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -49,7 +45,6 @@ class BookForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
-            self.initial['author_names'] = ', '.join([a.name for a in self.instance.authors.all()])
             if self.instance.publisher:
                 self.initial['publisher_name'] = self.instance.publisher.name
 
@@ -73,16 +68,6 @@ class BookForm(forms.ModelForm):
             
         if commit:
             book.save()
-            self.save_m2m()
-            author_names = self.cleaned_data.get('author_names', '')
-            author_objs = []
-            for a_name in author_names.split(','):
-                a_name = a_name.strip()
-                if a_name:
-                    author, _ = Author.objects.get_or_create(name__iexact=a_name, defaults={'name': a_name.title()})
-                    author_objs.append(author)
-            book.authors.set(author_objs)
-            
         return book
 
 class ExcelImportForm(forms.Form):
