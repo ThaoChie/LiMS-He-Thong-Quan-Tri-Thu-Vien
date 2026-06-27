@@ -16,20 +16,6 @@ class Category(models.Model):
         return self.name
 
 
-class Author(models.Model):
-    """Tác giả."""
-    name = models.CharField(max_length=255, verbose_name='Tên tác giả')
-    biography = models.TextField(blank=True, null=True, verbose_name='Tiểu sử')
-
-    class Meta:
-        verbose_name = 'Tác giả'
-        verbose_name_plural = 'Tác giả'
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
-
-
 class Publisher(models.Model):
     """Nhà xuất bản."""
     name = models.CharField(max_length=255, unique=True, verbose_name='Tên NXB')
@@ -61,9 +47,8 @@ class Book(models.Model):
         null=True,
         verbose_name='Mã ISBN',
     )
-    authors = models.ManyToManyField(
-        Author,
-        related_name='books',
+    authors = models.CharField(
+        max_length=255,
         verbose_name='Tác giả',
     )
     category = models.ForeignKey(
@@ -94,11 +79,9 @@ class Book(models.Model):
         null=True,
         verbose_name='Ảnh bìa',
     )
-    pdf_file = models.FileField(
-        upload_to='books_pdf/',
-        blank=True,
-        null=True,
-        verbose_name='File PDF',
+    price = models.PositiveIntegerField(
+        default=100000,
+        verbose_name='Giá bìa (VNĐ)',
     )
     total_copies = models.PositiveIntegerField(default=1, verbose_name='Tổng số bản')
     available_copies = models.PositiveIntegerField(default=1, verbose_name='Số bản có sẵn')
@@ -122,3 +105,24 @@ class Book(models.Model):
     @property
     def is_available(self):
         return self.available_copies > 0
+
+
+class PDFDocument(models.Model):
+    """Lưu trữ file PDF của Book và trạng thái nhúng."""
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Processing', 'Processing'),
+        ('Done', 'Done'),
+        ('Failed', 'Failed'),
+    ]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='pdf_documents', verbose_name='Sách')
+    file_path = models.FileField(upload_to='books_pdf/', verbose_name='File PDF')
+    embed_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending', verbose_name='Trạng thái Embed')
+
+    class Meta:
+        verbose_name = 'Tài liệu PDF'
+        verbose_name_plural = 'Tài liệu PDF'
+
+    def __str__(self):
+        return f"PDF of {self.book.title}"

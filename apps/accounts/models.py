@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import RegexValidator
 
 
 class CustomUser(AbstractUser):
@@ -8,9 +9,18 @@ class CustomUser(AbstractUser):
     """
     ROLE_CHOICES = [
         ('reader', 'Bạn đọc'),
+        ('lecturer', 'Giảng viên'),
         ('librarian', 'Thủ thư'),
         ('admin', 'Quản trị viên'),
     ]
+
+    email = models.EmailField(
+        unique=True,
+        verbose_name='Email',
+        error_messages={
+            'unique': 'Địa chỉ email này đã tồn tại trong hệ thống.'
+        }
+    )
 
     role = models.CharField(
         max_length=20,
@@ -18,7 +28,9 @@ class CustomUser(AbstractUser):
         default='reader',
         verbose_name='Vai trò',
     )
+    phone_regex = RegexValidator(regex=r'^0[0-9]{9}$', message="Số điện thoại không hợp lệ. Phải bắt đầu bằng số 0 và có đúng 10 chữ số.")
     phone_number = models.CharField(
+        validators=[phone_regex],
         max_length=15,
         blank=True,
         null=True,
@@ -32,6 +44,19 @@ class CustomUser(AbstractUser):
     is_active = models.BooleanField(
         default=True,
         verbose_name='Đang hoạt động',
+    )
+    can_borrow = models.BooleanField(
+        default=True,
+        verbose_name='Được phép mượn sách',
+    )
+    failed_login_attempts = models.IntegerField(
+        default=0,
+        verbose_name='Số lần đăng nhập sai',
+    )
+    locked_until = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Khóa tài khoản đến',
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Ngày tạo')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Ngày cập nhật')
@@ -47,6 +72,10 @@ class CustomUser(AbstractUser):
     @property
     def is_reader(self):
         return self.role == 'reader'
+
+    @property
+    def is_lecturer(self):
+        return self.role == 'lecturer'
 
     @property
     def is_librarian(self):

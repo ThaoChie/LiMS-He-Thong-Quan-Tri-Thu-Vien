@@ -4,12 +4,14 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Avg
 
-from .models import Book, Category
-from .forms import BookSearchForm, BookForm, CategoryForm
+from .models import Book, Category, Publisher
+from .forms import BookSearchForm, BookForm, CategoryForm, ExcelImportForm
+import openpyxl
 
 
+@login_required
 def book_list_view(request):
-    books = Book.objects.prefetch_related('authors').select_related('category').order_by('-created_at')
+    books = Book.objects.select_related('category').order_by('-created_at')
     cat = request.GET.get('category')
     if cat:
         books = books.filter(category_id=cat)
@@ -21,8 +23,9 @@ def book_list_view(request):
     })
 
 
+@login_required
 def book_detail_view(request, pk):
-    book = get_object_or_404(Book.objects.prefetch_related('authors', 'reviews__user').select_related('category', 'publisher'), pk=pk)
+    book = get_object_or_404(Book.objects.prefetch_related('reviews__user').select_related('category', 'publisher'), pk=pk)
     reviews = book.reviews.all().order_by('-created_at')
     avg_rating = reviews.aggregate(avg=Avg('rating'))['avg']
     user_has_reviewed = False
@@ -37,16 +40,17 @@ def book_detail_view(request, pk):
     })
 
 
+@login_required
 def book_search_view(request):
     form = BookSearchForm(request.GET)
-    books = Book.objects.prefetch_related('authors').select_related('category')
+    books = Book.objects.select_related('category')
     if form.is_valid():
         q = form.cleaned_data.get('q')
         category = form.cleaned_data.get('category')
         status = form.cleaned_data.get('status')
         if q:
             books = books.filter(
-                Q(title__icontains=q) | Q(authors__name__icontains=q) | Q(isbn__icontains=q)
+                Q(title__icontains=q) | Q(authors__icontains=q) | Q(isbn__icontains=q)
             ).distinct()
         if category:
             books = books.filter(category=category)
@@ -69,7 +73,7 @@ def book_manage_view(request):
     if not _check_staff(request):
         return redirect('home')
     q = request.GET.get('q', '')
-    books = Book.objects.prefetch_related('authors').select_related('category')
+    books = Book.objects.select_related('category')
     if q:
         books = books.filter(Q(title__icontains=q) | Q(isbn__icontains=q))
     paginator = Paginator(books.order_by('-created_at'), 20)
@@ -90,6 +94,58 @@ def book_create_view(request):
     else:
         form = BookForm()
     return render(request, 'catalog/book_form.html', {'form': form, 'title': 'Thêm sách mới'})
+
+
+@login_required
+def book_import_view(request):
+    if not _check_staff(request):
+        return redirect('home')
+    if request.method == 'POST':
+        form = ExcelImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['excel_file']
+            try:
+                wb = openpyxl.load_workbook(excel_file)
+                sheet = wb.active
+                count = 0
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    if not row[0]: continue
+                    title = str(row[0]).strip()
+                    isbn = str(row[1]).strip() if row[1] else None
+                    price = int(row[2]) if row[2] else 100000
+                    total_copies = int(row[3]) if row[3] else 1
+                    author_names = str(row[4]).strip() if row[4] else 'Khuyết danh'
+                    category_name = str(row[5]).strip() if row[5] else 'Khác'
+                    publisher_name = str(row[6]).strip() if row[6] else ''
+                    
+                    if isbn and Book.objects.filter(isbn=isbn).exists():
+                        continue
+                        
+                    category, _ = Category.objects.get_or_create(name__iexact=category_name, defaults={'name': category_name})
+                    publisher = None
+                    if publisher_name:
+                        publisher, _ = Publisher.objects.get_or_create(name__iexact=publisher_name, defaults={'name': publisher_name.title()})
+                        
+                    book = Book.objects.create(
+                        title=title,
+                        isbn=isbn,
+                        price=price,
+                        total_copies=total_copies,
+                        available_copies=total_copies,
+                        category=category,
+                        publisher=publisher,
+                        authors=author_names
+                    )
+                    
+
+                    count += 1
+                messages.success(request, f'Đã import thành công {count} cuốn sách!')
+                return redirect('catalog:book_manage')
+            except Exception as e:
+                messages.error(request, f'Lỗi khi đọc file: {str(e)}')
+    else:
+        form = ExcelImportForm()
+    return render(request, 'catalog/book_import.html', {'form': form})
 
 
 @login_required
@@ -132,7 +188,9 @@ def category_manage_view(request):
     else:
         form = CategoryForm()
     categories = Category.objects.all()
-    return render(request, 'catalog/category_manage.html', {'form': form, 'categories': categories})
+    paginator = Paginator(categories, 10)
+    page = paginator.get_page(request.GET.get('page'))
+    return render(request, 'catalog/category_manage.html', {'form': form, 'page_obj': page})
 
 
 @login_required

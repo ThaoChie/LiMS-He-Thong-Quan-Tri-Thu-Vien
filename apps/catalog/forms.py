@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book, Category, Author, Publisher
+from .models import Book, Category, Publisher
 
 
 class BookSearchForm(forms.Form):
@@ -17,25 +17,64 @@ class BookSearchForm(forms.Form):
 
 
 class BookForm(forms.ModelForm):
+
+    publisher_name = forms.CharField(
+        label='Nhà xuất bản',
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VD: NXB Trẻ'})
+    )
+
     class Meta:
         model = Book
-        fields = ('title', 'isbn', 'authors', 'category', 'publisher',
-                  'publication_year', 'description', 'cover_image', 'pdf_file',
-                  'total_copies', 'available_copies', 'status')
+        fields = ('title', 'isbn', 'authors', 'category', 'publication_year', 'description', 
+                  'cover_image', 'price', 'total_copies', 'available_copies', 'status')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'isbn': forms.TextInput(attrs={'class': 'form-control'}),
-            'authors': forms.CheckboxSelectMultiple(),
+            'authors': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VD: Nguyễn Nhật Ánh, Nam Cao'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
-            'publisher': forms.Select(attrs={'class': 'form-select'}),
             'publication_year': forms.NumberInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'cover_image': forms.FileInput(attrs={'class': 'form-control'}),
-            'pdf_file': forms.FileInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'total_copies': forms.NumberInput(attrs={'class': 'form-control'}),
             'available_copies': forms.NumberInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
         }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            if self.instance.publisher:
+                self.initial['publisher_name'] = self.instance.publisher.name
+
+    def clean_isbn(self):
+        isbn = self.cleaned_data.get('isbn')
+        if isbn:
+            from django.core.exceptions import ValidationError
+            qs = Book.objects.filter(isbn=isbn)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise ValidationError(f"Sách có mã ISBN '{isbn}' đã tồn tại trong hệ thống. Vui lòng tìm sách này và tăng 'Tổng số bản' thay vì tạo mới.")
+        return isbn
+
+    def save(self, commit=True):
+        book = super().save(commit=False)
+        pub_name = self.cleaned_data.get('publisher_name', '').strip()
+        if pub_name:
+            publisher, _ = Publisher.objects.get_or_create(name__iexact=pub_name, defaults={'name': pub_name.title()})
+            book.publisher = publisher
+            
+        if commit:
+            book.save()
+        return book
+
+class ExcelImportForm(forms.Form):
+    excel_file = forms.FileField(
+        label='Chọn file Excel (.xlsx)',
+        widget=forms.FileInput(attrs={'class': 'form-control', 'accept': '.xlsx'})
+    )
 
 
 class CategoryForm(forms.ModelForm):

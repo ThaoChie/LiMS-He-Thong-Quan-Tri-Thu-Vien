@@ -11,6 +11,7 @@ class BorrowRecord(models.Model):
         ('borrowed', 'Đang mượn'),
         ('returned', 'Đã trả'),
         ('overdue', 'Quá hạn'),
+        ('lost', 'Báo mất'),
         ('cancelled', 'Đã hủy'),
     ]
 
@@ -48,6 +49,7 @@ class BorrowRecord(models.Model):
         related_name='approved_borrows',
         verbose_name='Người duyệt',
     )
+    renewal_count = models.PositiveIntegerField(default=0, verbose_name='Số lần gia hạn')
     created_at = models.DateTimeField(default=timezone.now, verbose_name='Ngày tạo')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Ngày cập nhật')
 
@@ -66,14 +68,36 @@ class BorrowRecord(models.Model):
             return True
         return False
 
+    @property
+    def days_until_due(self):
+        from django.utils import timezone
+        if self.status == 'borrowed' and self.due_date:
+            return (self.due_date.date() - timezone.now().date()).days
+        return 0
+
+    @property
+    def has_violation(self):
+        return self.status in ['overdue', 'lost']
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.user_id:
+            has_violations = BorrowRecord.objects.filter(
+                user_id=self.user_id,
+                status__in=['overdue', 'lost']
+            ).exists()
+            self.user.can_borrow = not has_violations
+            self.user.save(update_fields=['can_borrow'])
+
 
 class Reservation(models.Model):
     """Đặt trước sách."""
     STATUS_CHOICES = [
-        ('active', 'Đang đặt'),
-        ('fulfilled', 'Đã hoàn thành'),
-        ('cancelled', 'Đã hủy'),
-        ('expired', 'Đã hết hạn'),
+        ('Waiting', 'Waiting'),
+        ('Notified', 'Notified'),
+        ('Completed', 'Completed'),
+        ('Expired', 'Expired'),
+        ('Cancelled', 'Cancelled'),
     ]
 
     user = models.ForeignKey(
@@ -93,9 +117,11 @@ class Reservation(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='active',
+        default='Waiting',
         verbose_name='Trạng thái',
     )
+    queue_position = models.PositiveIntegerField(null=True)
+    notified_at = models.DateTimeField(null=True)
 
     class Meta:
         verbose_name = 'Đặt trước'
