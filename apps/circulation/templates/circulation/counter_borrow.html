@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Mượn sách tại quầy{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-upc-scan me-2 text-primary"></i> Quét mã / Nhập thông tin mượn sách</h5>
+                <p class="text-muted mt-2 mb-0" style="font-size: 0.9rem;">Thủ thư quét mã thẻ của độc giả và mã vạch ISBN của sách để tiến hành cho mượn trực tiếp.</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">Mã số độc giả (Student Code)</label>
+                        <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-person-badge text-secondary"></i></span>
+                            <input type="text" name="student_code" class="form-control border-0 bg-light" placeholder="Nhập mã thẻ độc giả..." required autofocus>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">Mã ISBN Sách</label>
+                        <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-upc text-secondary"></i></span>
+                            <input type="text" name="book_isbn" class="form-control border-0 bg-light" placeholder="Quét mã vạch hoặc nhập ISBN..." required>
+                        </div>
+                    </div>
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                            <i class="bi bi-check-circle me-2"></i> Xác nhận cho mượn
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

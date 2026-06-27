@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Đặt trước - LiMS{% endblock %}
+{% block page_title %}Xác nhận Đặt trước{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-bookmark-plus" style="font-size:3rem;color:var(--primary);"></i>
+                <h5 class="fw-bold mt-2">{{ book.title }}</h5>
+                <p class="text-muted">Sách hiện không có sẵn. Bạn có muốn đặt trước?</p>
+                <p class="text-muted" style="font-size:0.85rem;">Đặt trước sẽ có hiệu lực trong 3 ngày.</p>
+                <form method="post" class="d-flex gap-2 justify-content-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-bookmark-check me-1"></i> Xác nhận đặt</button>
+                    <a href="{% url 'catalog:book_detail' book.pk %}" class="btn btn-outline-secondary">Hủy</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

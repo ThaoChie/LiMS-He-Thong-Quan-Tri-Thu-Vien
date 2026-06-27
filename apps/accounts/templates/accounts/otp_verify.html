@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Xác thực 2 Lớp (OTP) - LiMS{% endblock %}
+{% block page_title %}Xác thực 2 Lớp{% endblock %}
+
+{% block content_public %}
+<div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="col-md-5 col-lg-4">
+        <div class="card p-4 text-center">
+            <h4 class="mb-3">Xác thực 2 Lớp</h4>
+            <p class="text-muted small mb-4">
+                Vui lòng nhập mã OTP gồm 6 chữ số vừa được gửi đến Email của bạn. Mã sẽ hết hạn sau <span id="otp-timer" class="fw-bold text-danger" style="font-size: 1.2rem;">30</span> giây.
+            </p>
+            {% if dev_otp %}
+            <div class="alert alert-info border border-info py-2 mb-4" style="background-color: #e8f4fd;">
+                <i class="bi bi-info-circle-fill text-primary"></i> <strong>Chế độ Demo Đồ án:</strong> Mã OTP của bạn là <span class="badge bg-primary fs-6">{{ dev_otp }}</span>
+            </div>
+            {% endif %}
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <input type="text" name="otp" class="form-control form-control-lg text-center" 
+                           placeholder="000000" maxlength="6" pattern="\d{6}" required
+                           style="font-size: 2rem; letter-spacing: 0.5rem; font-weight: 700;">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Xác nhận OTP</button>
+            </form>
+            
+            <div class="mt-4">
+                <a href="{% url 'accounts:otp_resend' %}" id="resend-btn" class="btn btn-outline-primary btn-sm mb-3">
+                    <i class="bi bi-arrow-clockwise"></i> Gửi lại mã OTP mới
+                </a>
+                <br>
+                <a href="{% url 'accounts:login' %}" class="text-muted small text-decoration-none">
+                    <i class="bi bi-arrow-left"></i> Quay lại trang Đăng nhập
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let timeLeft = 30;
+    const timerEl = document.getElementById('otp-timer');
+    
+    const interval = setInterval(function() {
+        timeLeft -= 1;
+        if (timeLeft >= 0) {
+            timerEl.innerText = timeLeft;
+        } else {
+            clearInterval(interval);
+            timerEl.innerText = "0";
+        }
+    }, 1000);
+});
+</script>
+{% endblock %}

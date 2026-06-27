@@ -3,7 +3,7 @@
 {% block page_title %}Danh sách Sách{% endblock %}
 
 {% block content %}
-<div class="d-flex flex-wrap gap-2 mb-3">
+<div class="filter-pills mb-3">
     <a href="{% url 'catalog:book_list' %}" class="filter-pill {% if not current_cat %}active{% endif %}">Tất cả</a>
     {% for cat in categories %}
     <a href="?category={{ cat.pk }}" class="filter-pill {% if current_cat == cat.pk|stringformat:'d' %}active{% endif %}">{{ cat.name }}</a>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="card-body">
                     <div class="book-title">{{ book.title }}</div>
-                    <div class="book-author">{{ book.authors.all|join:", "|default:"Không rõ" }}</div>
+                    <div class="book-author">{{ book.authors|default:"Không rõ" }}</div>
                     <div class="book-meta">
                         <span class="badge badge-{{ book.status }}">{{ book.get_status_display }}</span>
                         <small class="text-muted">{{ book.available_copies }}/{{ book.total_copies }}</small>
@@ -39,14 +39,24 @@
     {% endfor %}
 </div>
 
-{% if page_obj.has_other_pages %}
+{% if page_obj %}
 <nav class="mt-4 d-flex justify-content-center">
     <ul class="pagination">
-        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_cat %}&category={{ current_cat }}{% endif %}">‹</a></li>{% endif %}
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1{% if current_cat %}&category={{ current_cat }}{% endif %}">«</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_cat %}&category={{ current_cat }}{% endif %}">‹</a></li>
+        {% endif %}
         {% for num in page_obj.paginator.page_range %}
-        <li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}{% if current_cat %}&category={{ current_cat }}{% endif %}">{{ num }}</a></li>
+            {% if num == page_obj.number %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}{% if current_cat %}&category={{ current_cat }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
         {% endfor %}
-        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_cat %}&category={{ current_cat }}{% endif %}">›</a></li>{% endif %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_cat %}&category={{ current_cat }}{% endif %}">›</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_cat %}&category={{ current_cat }}{% endif %}">»</a></li>
+        {% endif %}
     </ul>
 </nav>
 {% endif %}
