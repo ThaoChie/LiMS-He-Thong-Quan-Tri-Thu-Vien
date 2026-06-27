@@ -1,0 +1,403 @@
+<mxfile host="65bd71144e">
+    <diagram name="ERD - Hệ thống Quản lý Thư viện (LiMS)" id="ERD_LiMS_001">
+        <mxGraphModel dx="1263" dy="712" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3000" pageHeight="2000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="200" value="ERD - HỆ THỐNG QUẢN LÝ THƯ VIỆN (LiMS)" style="text;html=1;fontSize=22;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#1a237e;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="5" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="CustomUser (Người dùng)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="320" width="320" height="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="30" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#6c8ebf;" parent="2" vertex="1">
+                    <mxGeometry y="56" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="username : CharField, unique" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="64" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="password : CharField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="90" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="email : EmailField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="116" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="first_name : CharField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="142" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="last_name : CharField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="168" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="role : CharField (reader/librarian/admin)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="194" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="phone_number : CharField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="220" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="address : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="246" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="is_active : BooleanField, default=True" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="272" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="created_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="298" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="updated_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="2" vertex="1">
+                    <mxGeometry y="324" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Book (Sách)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="1250" y="250" width="340" height="402" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="30" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#6c8ebf;" parent="16" vertex="1">
+                    <mxGeometry y="56" width="340" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="title : CharField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="64" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="isbn : CharField, unique, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="90" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="🔗 category_id : FK → Category" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="116" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="🔗 publisher_id : FK → Publisher" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="142" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="publication_year : PositiveIntegerField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="168" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="description : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="194" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="cover_image : ImageField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="220" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="pdf_file : FileField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="246" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="total_copies : PositiveIntegerField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="272" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="available_copies : PositiveIntegerField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="298" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="status : CharField (available/borrowed/...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="324" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="created_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="350" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="updated_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="16" vertex="1">
+                    <mxGeometry y="376" width="340" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Category (Thể loại)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="1880" y="80" width="290" height="142" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="32" vertex="1">
+                    <mxGeometry y="30" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#82b366;" parent="32" vertex="1">
+                    <mxGeometry y="56" width="290" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="name : CharField, unique" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="32" vertex="1">
+                    <mxGeometry y="64" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="description : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="32" vertex="1">
+                    <mxGeometry y="90" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="created_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="32" vertex="1">
+                    <mxGeometry y="116" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Author (Tác giả)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="1880" y="720" width="290" height="116" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="38" vertex="1">
+                    <mxGeometry y="30" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#82b366;" parent="38" vertex="1">
+                    <mxGeometry y="56" width="290" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="name : CharField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="38" vertex="1">
+                    <mxGeometry y="64" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="biography : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="38" vertex="1">
+                    <mxGeometry y="90" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="Publisher (Nhà xuất bản)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="1880" y="360" width="290" height="116" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="43" vertex="1">
+                    <mxGeometry y="30" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#82b366;" parent="43" vertex="1">
+                    <mxGeometry y="56" width="290" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="name : CharField, unique" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="43" vertex="1">
+                    <mxGeometry y="64" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="address : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="43" vertex="1">
+                    <mxGeometry y="90" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="Book_Author (Sách - Tác giả)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="1560" y="900" width="290" height="82" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="🔗 book_id : FK → Book" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=3;html=1;" parent="48" vertex="1">
+                    <mxGeometry y="30" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="🔗 author_id : FK → Author" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=3;html=1;" parent="48" vertex="1">
+                    <mxGeometry y="56" width="290" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="BorrowRecord (Phiếu mượn)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="60" width="370" height="376" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="30" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#d6b656;" parent="51" vertex="1">
+                    <mxGeometry y="56" width="370" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="🔗 user_id : FK → CustomUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="64" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="🔗 book_id : FK → Book" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="90" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="borrow_date : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="116" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="due_date : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="142" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="return_date : DateTimeField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="168" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="status : CharField (pending/approved/...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="194" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="notes : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="220" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="🔗 approved_by_id : FK → CustomUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="246" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="created_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="272" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="updated_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="298" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="new_erd_1" value="fine_amount : DecimalField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="324" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="new_erd_2" value="fine_status : CharField (paid/unpaid)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="51" vertex="1">
+                    <mxGeometry y="350" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="Reservation (Đặt trước)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="500" width="320" height="194" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="64" vertex="1">
+                    <mxGeometry y="30" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#d6b656;" parent="64" vertex="1">
+                    <mxGeometry y="56" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="🔗 user_id : FK → CustomUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="64" vertex="1">
+                    <mxGeometry y="64" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="🔗 book_id : FK → Book" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="64" vertex="1">
+                    <mxGeometry y="90" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="reserved_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="64" vertex="1">
+                    <mxGeometry y="116" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="expires_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="64" vertex="1">
+                    <mxGeometry y="142" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="status : CharField (active/fulfilled/...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="64" vertex="1">
+                    <mxGeometry y="168" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="BookProposal (Đề xuất sách)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="1050" width="350" height="324" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="30" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#d6b656;" parent="72" vertex="1">
+                    <mxGeometry y="56" width="350" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="🔗 user_id : FK → CustomUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="64" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="title : CharField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="90" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="author_name : CharField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="116" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="isbn : CharField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="142" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="reason : TextField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="168" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="status : CharField (pending/approved/...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="194" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="admin_notes : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="220" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="🔗 reviewed_by_id : FK → CustomUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="246" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="created_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="272" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="updated_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="72" vertex="1">
+                    <mxGeometry y="298" width="350" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="Review (Đánh giá)" style="shape=swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;collapsible=0;fontSize=13;html=1;rounded=1;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="880" width="320" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="🔑 id : AutoField (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="30" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=10;rotatable=0;labelPosition=left;points=[];portConstraint=eastwest;strokeColor=#d6b656;" parent="85" vertex="1">
+                    <mxGeometry y="56" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="🔗 user_id : FK → CustomUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="64" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="🔗 book_id : FK → Book" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="90" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" value="rating : PositiveSmallIntegerField (1-5)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="116" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="comment : TextField, nullable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="142" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="created_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="168" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="updated_at : DateTimeField" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;html=1;" parent="85" vertex="1">
+                    <mxGeometry y="194" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="1:N (user_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#4a86c8;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="2" target="54" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="1:N (approved_by_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#4a86c8;fontSize=10;labelBackgroundColor=#ffffff;dashed=1;" parent="1" source="2" target="61" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="500" y="470"/>
+                            <mxPoint x="500" y="319"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="96" value="1:N (user_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#4a86c8;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="2" target="67" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="1:N (user_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#4a86c8;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="2" target="75" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="180" y="1020"/>
+                            <mxPoint x="400" y="1020"/>
+                            <mxPoint x="400" y="1127"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="98" value="1:N (reviewed_by_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#4a86c8;fontSize=10;labelBackgroundColor=#ffffff;dashed=1;" parent="1" source="2" target="82" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="240" y="983"/>
+                            <mxPoint x="440" y="983"/>
+                            <mxPoint x="440" y="1309"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="99" value="1:N (user_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#4a86c8;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="2" target="88" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="290" y="957"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="100" value="1:N (book_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#82b366;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="16" target="55" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="1:N (book_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#82b366;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="16" target="68" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="1:N (book_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#82b366;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="16" target="89" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="1:N" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#9673a6;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="16" target="49" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1480" y="943"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="104" value="1:N" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#9673a6;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="38" target="50" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="1:N" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#82b366;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="32" target="21" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="1:N" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=1.5;strokeColor=#82b366;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="43" target="22" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1650" y="418"/>
+                            <mxPoint x="1650" y="418"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="201" value="CHÚ THÍCH (Legend)" style="shape=swimlane;fontStyle=1;align=center;startSize=26;fillColor=#f5f5f5;strokeColor=#666666;collapsible=0;fontSize=12;html=1;rounded=1;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1780" y="1000" width="300" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="202" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="36" width="20" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="203" value="Thực thể chính (Main Entity)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="40" y="30" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="204" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="62" width="20" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="205" value="Thực thể tham chiếu (Reference)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="40" y="56" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="206" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="88" width="20" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="207" value="Thực thể giao dịch (Transaction)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="40" y="82" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="208" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="114" width="20" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="209" value="Bảng trung gian (Junction Table)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="40" y="108" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="210" value="🔑 = Primary Key (Khóa chính)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="140" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="211" value="🔗 = Foreign Key (Khóa ngoại)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="166" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="212" value="- = Quan hệ tùy chọn (Optional FK)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="201" vertex="1">
+                    <mxGeometry x="10" y="192" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="213" value="⚠ UNIQUE(user_id, book_id)" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="1105" width="280" height="26" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
