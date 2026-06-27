@@ -16,6 +16,9 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, ['*']),
     DB_HOST=(str, 'db'),
     DB_PORT=(str, '3306'),
+    CHROMADB_HOST=(str, 'chromadb'),
+    CHROMADB_PORT=(int, 8000),
+    HUGGINGFACE_API_KEY=(str, 'mock_key'),
 )
 environ.Env.read_env(BASE_DIR / '.env')
 
@@ -26,6 +29,16 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+
+# Cho phép các domain của ngrok gửi request POST (như Form Login)
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+    'https://*.ngrok-free.dev',
+    'https://*.ngrok.app',
+    'https://*.ngrok.io',
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -41,6 +54,8 @@ INSTALLED_APPS = [
     'apps.circulation',
     'apps.proposals',
     'apps.reviews',
+    'apps.chatbot',
+    'apps.dashboard',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +66,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'apps.accounts.backends.EmailAuthBackend',
 ]
 
 ROOT_URLCONF = 'lims_project.urls'
@@ -92,6 +111,13 @@ CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+# ChromaDB Configuration
+CHROMADB_HOST = env('CHROMADB_HOST')
+CHROMADB_PORT = env.int('CHROMADB_PORT')
+
+# HuggingFace API Key
+HUGGINGFACE_API_KEY = env('HUGGINGFACE_API_KEY')
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -148,3 +174,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email settings
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@lims.local')

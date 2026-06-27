@@ -45,10 +45,26 @@ def review_proposals_view(request):
         messages.error(request, 'Không có quyền.')
         return redirect('home')
     status_filter = request.GET.get('status', '')
-    proposals = BookProposal.objects.all().select_related('user')
+    proposals = BookProposal.objects.all().select_related('user').order_by('-created_at')
     if status_filter:
         proposals = proposals.filter(status=status_filter)
-    paginator = Paginator(proposals.order_by('-created_at'), 20)
+        
+    grouped = []
+    seen = {}
+    for p in proposals:
+        key = p.isbn if p.isbn else f"nopk_{p.pk}"
+        if key not in seen:
+            p.grouped_count = 1
+            p.grouped_users = [p.user.username]
+            seen[key] = p
+            grouped.append(p)
+        else:
+            rep = seen[key]
+            rep.grouped_count += 1
+            if p.user.username not in rep.grouped_users:
+                rep.grouped_users.append(p.user.username)
+                
+    paginator = Paginator(grouped, 20)
     page = paginator.get_page(request.GET.get('page'))
     return render(request, 'proposals/review_proposals.html', {'page_obj': page, 'status_filter': status_filter})
 
@@ -62,10 +78,41 @@ def review_proposal_action_view(request, pk):
     if request.method == 'POST':
         action = request.POST.get('action')
         if action in ['approved', 'rejected']:
-            proposal.status = action
-            proposal.admin_notes = request.POST.get('admin_notes', '')
-            proposal.reviewed_by = request.user
-            proposal.save()
+            if proposal.isbn:
+                target_proposals = BookProposal.objects.filter(isbn=proposal.isbn, status='pending').select_related('user')
+            else:
+                target_proposals = [proposal]
+                
+            admin_notes = request.POST.get('admin_notes', '')
+            count = 0
+            users_to_email = []
+            for p in target_proposals:
+                p.status = action
+                p.admin_notes = admin_notes
+                p.reviewed_by = request.user
+                p.save()
+                count += 1
+                if p.user.email and (p.user, p.title) not in users_to_email:
+                    users_to_email.append((p.user, p.title))
+            
             label = 'phê duyệt' if action == 'approved' else 'từ chối'
-            messages.success(request, f'Đã {label} đề xuất "{proposal.title}".')
+            
+            try:
+                from django.core.mail import send_mail
+                from django.conf import settings
+                from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@lims.local')
+                for u, book_title in users_to_email:
+                    subject = f'Kết quả đề xuất sách: {book_title}'
+                    if action == 'approved':
+                        msg = f'Xin chào {u.username},\n\nĐề xuất mua cuốn sách "{book_title}" (ISBN: {proposal.isbn}) của bạn đã được thư viện phê duyệt gom nhóm và sẽ sớm được bổ sung vào kho sách. Cảm ơn sự đóng góp của bạn!'
+                    else:
+                        msg = f'Xin chào {u.username},\n\nRất tiếc, đề xuất mua cuốn sách "{book_title}" (ISBN: {proposal.isbn}) của bạn đã bị từ chối với lý do:\n"{admin_notes}"\n\nCảm ơn sự đóng góp của bạn!'
+                    send_mail(subject, msg, from_email, [u.email], fail_silently=True)
+            except Exception:
+                pass
+                
+            if count > 1:
+                messages.success(request, f'Đã {label} đồng loạt {count} đề xuất cho mã ISBN {proposal.isbn}.')
+            else:
+                messages.success(request, f'Đã {label} đề xuất "{proposal.title}".')
     return redirect('proposals:review_proposals')

@@ -9,7 +9,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      - "3307:3306"
+      - "3309:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -19,6 +19,15 @@ services:
     restart: always
     ports:
       - "6379:6379"
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: lims_chromadb
+    restart: always
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
 
   web:
     build: .
@@ -33,6 +42,7 @@ services:
     depends_on:
       - db
       - redis
+      - chromadb
 
   celery:
     build: .
@@ -45,6 +55,8 @@ services:
     depends_on:
       - db
       - redis
+      - chromadb
 
 volumes:
   mysql_data:
+  chromadb_data:

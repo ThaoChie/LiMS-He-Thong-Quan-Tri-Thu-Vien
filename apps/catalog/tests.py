@@ -1,43 +1,45 @@
-from django.test import TestCase
+from django.test import TestCase, Client
+from django.urls import reverse
+from apps.accounts.models import CustomUser
+from apps.catalog.models import Category, Publisher, Book
 
-from .models import Author, Book, Category, Publisher
-
-
-class CatalogModelRelationshipTests(TestCase):
-    def test_book_relations_with_category_publisher_and_authors(self):
-        category = Category.objects.create(name='Van hoc Viet Nam')
-        publisher = Publisher.objects.create(name='NXB Tre')
-        first_author = Author.objects.create(name='Nguyen Nhat Anh')
-        second_author = Author.objects.create(name='Co tac gia')
-
-        book = Book.objects.create(
-            title='Mat biec',
-            isbn='1234567890123',
-            category=category,
-            publisher=publisher,
-            publication_year=1990,
-            description='Tieu thuyet ve tuoi tre va moi tinh don phuong.',
-            total_copies=5,
-            available_copies=4,
+class CatalogGuestRestrictionTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = CustomUser.objects.create_user(
+            username='student1', email='student1@example.com', password='password123', role='student'
         )
-        book.authors.add(first_author, second_author)
-
-        self.assertEqual(book.category, category)
-        self.assertEqual(book.publisher, publisher)
-        self.assertEqual(book.authors.count(), 2)
-        self.assertIn(book, category.books.all())
-        self.assertIn(book, publisher.books.all())
-        self.assertIn(book, first_author.books.all())
-        self.assertTrue(book.is_available)
-
-    def test_book_can_store_cover_and_pdf_paths(self):
-        book = Book.objects.create(
-            title='Tai lieu PDF',
-            cover_image='covers/sample.jpg',
-            pdf_file='books_pdf/sample.pdf',
-            total_copies=1,
-            available_copies=1,
+        self.category = Category.objects.create(name='IT')
+        self.publisher = Publisher.objects.create(name='NXB KHKT')
+        self.book = Book.objects.create(
+            title='Django Web', category=self.category, publisher=self.publisher, isbn='9781234567890'
         )
 
-        self.assertEqual(book.cover_image.name, 'covers/sample.jpg')
-        self.assertEqual(book.pdf_file.name, 'books_pdf/sample.pdf')
+    def test_guest_cannot_access_book_list(self):
+        """Edge case: Guest chưa đăng nhập bị chuyển hướng khi truy cập danh sách sách."""
+        url = reverse('catalog:book_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/accounts/login/'))
+
+    def test_guest_cannot_access_book_detail(self):
+        """Edge case: Guest chưa đăng nhập bị chuyển hướng khi xem chi tiết sách."""
+        url = reverse('catalog:book_detail', args=[self.book.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/accounts/login/'))
+
+    def test_guest_cannot_access_book_search(self):
+        """Edge case: Guest chưa đăng nhập bị chuyển hướng khi tra cứu sách."""
+        url = reverse('catalog:book_search')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/accounts/login/'))
+
+    def test_logged_in_user_can_access_catalog(self):
+        """Happy case: User đã đăng nhập truy cập thành công tra cứu sách."""
+        self.client.login(username='student1@example.com', password='password123')
+        url = reverse('catalog:book_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Django Web')

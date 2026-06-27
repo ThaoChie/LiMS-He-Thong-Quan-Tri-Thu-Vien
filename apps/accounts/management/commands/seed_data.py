@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.db import transaction
 
 from apps.accounts.models import CustomUser
-from apps.catalog.models import Category, Author, Publisher, Book
+from apps.catalog.models import Category, Publisher, Book
 from apps.circulation.models import BorrowRecord, Reservation
 from apps.proposals.models import BookProposal
 from apps.reviews.models import Review
@@ -280,7 +280,6 @@ class Command(BaseCommand):
             Reservation.objects.all().delete()
             BorrowRecord.objects.all().delete()
             Book.objects.all().delete()
-            Author.objects.all().delete()
             Publisher.objects.all().delete()
             Category.objects.all().delete()
             self.stdout.write(self.style.WARNING("   Đã xóa xong.\n"))
@@ -299,17 +298,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"   ✓ {cat.name}")
         self.stdout.write(self.style.SUCCESS(f"   → {len(cat_map)} thể loại\n"))
 
-        # 2. Authors
-        self.stdout.write("✍️  Tạo tác giả...")
-        author_map = {}
-        for data in AUTHORS:
-            author, created = Author.objects.get_or_create(
-                name=data["name"], defaults={"biography": data["biography"]}
-            )
-            author_map[data["name"]] = author
-            if created:
-                self.stdout.write(f"   ✓ {author.name}")
-        self.stdout.write(self.style.SUCCESS(f"   → {len(author_map)} tác giả\n"))
+
 
         # 3. Publishers
         self.stdout.write("🏢 Tạo nhà xuất bản...")
@@ -328,6 +317,7 @@ class Command(BaseCommand):
         book_map = {}
         for data in BOOKS:
             defaults = {
+                "authors": ", ".join(data["author_names"]),
                 "category": cat_map.get(data["category"]),
                 "publisher": pub_map.get(data["publisher"]),
                 "publication_year": data["year"],
@@ -340,9 +330,6 @@ class Command(BaseCommand):
                 title=data["title"], defaults={**defaults, "isbn": data.get("isbn")}
             )
             if created:
-                for aname in data["author_names"]:
-                    if aname in author_map:
-                        book.authors.add(author_map[aname])
                 self.stdout.write(f"   ✓ {book.title[:60]}")
             book_map[data["title"]] = book
         self.stdout.write(self.style.SUCCESS(f"   → {len(book_map)} cuốn sách\n"))
@@ -357,14 +344,24 @@ class Command(BaseCommand):
             now = timezone.now()
             borrow_scenarios = [
                 # (user_idx, book_idx, status, days_ago, due_offset, return_offset)
-                (0, 0, "returned", 30, 14, 12),   # sv_an trả Clean Code
+                (0, 0, "returned", 30, 14, 12),   # sv_an trả Clean Code (đúng hạn)
                 (0, 1, "borrowed", 7,  14, None),  # sv_an đang mượn Python
                 (1, 3, "pending",  1,  14, None),  # sv_binh chờ duyệt ML
-                (1, 4, "returned", 20, 14, 10),   # sv_binh trả Tư duy
+                (1, 4, "returned", 20, 14, 18),   # sv_binh trả Tư duy (trễ 4 ngày) -> unpaid
                 (2, 5, "borrowed", 5,  14, None),  # sv_cuong đang mượn Đắc Nhân Tâm
-                (2, 6, "overdue",  25, 14, None),  # sv_cuong quá hạn
-                (3, 7, "returned", 45, 14, 14),   # sv_dung trả Chí Phèo
+                (2, 6, "borrowed", 25, 14, None),  # sv_cuong đang mượn nhưng quá hạn (thực tế over 11 ngày)
+                (3, 7, "returned", 45, 14, 16),   # sv_dung trả Chí Phèo (trễ 2 ngày) -> paid
                 (3, 8, "borrowed", 3,  14, None),  # sv_dung mượn Dế Mèn
+                
+                # Thêm test data
+                (0, 9, "returned", 50, 14, 14),   # sv_an trả đúng hạn (Mắt biếc)
+                (0, 10, "overdue", 30, 14, None), # sv_an quá hạn (Sapiens)
+                (1, 11, "returned", 60, 14, 20),  # sv_binh trả trễ 6 ngày -> unpaid (Toán học)
+                (1, 12, "borrowed", 2, 14, None), # sv_binh mượn Tâm lý học đám đông
+                (2, 13, "returned", 70, 14, 15),  # sv_cuong trả trễ 1 ngày -> paid (Homo Deus)
+                (2, 14, "pending", 2, 14, None),  # sv_cuong đang chờ duyệt (Lịch sử VN)
+                (3, 2, "borrowed", 16, 14, None), # sv_dung đang mượn nhưng đã lố 2 ngày (Algorithms)
+                (3, 4, "returned", 80, 14, 10),   # sv_dung trả sớm 4 ngày (Tư duy)
             ]
             borrow_created = 0
             for user_idx, book_idx, status, days_ago, due_days, return_offset in borrow_scenarios:
@@ -379,6 +376,9 @@ class Command(BaseCommand):
                 if BorrowRecord.objects.filter(user=user, book=book, status=status).exists():
                     continue
 
+                if return_date and return_offset > due_days:
+                    status = 'overdue'
+
                 record = BorrowRecord.objects.create(
                     user=user,
                     book=book,
@@ -387,7 +387,7 @@ class Command(BaseCommand):
                     return_date=return_date,
                     status=status,
                     approved_by=librarian if status not in ["pending"] else None,
-                    notes="Phiếu mượn mẫu" if status != "overdue" else "Nhắc nhở: sách quá hạn!",
+                    notes="Phiếu mượn mẫu" if days_ago < 20 else "Nhắc nhở: vi phạm tín nhiệm (quá hạn)!",
                 )
                 if status == "borrowed" and book.available_copies > 0:
                     book.available_copies -= 1
@@ -474,7 +474,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("✅ HOÀN THÀNH! Tóm tắt dữ liệu đã tạo:"))
         self.stdout.write("=" * 60)
         self.stdout.write(f"  📂 Thể loại      : {Category.objects.count()}")
-        self.stdout.write(f"  ✍️  Tác giả       : {Author.objects.count()}")
         self.stdout.write(f"  🏢 Nhà xuất bản  : {Publisher.objects.count()}")
         self.stdout.write(f"  📚 Sách          : {Book.objects.count()}")
         self.stdout.write(f"  🔄 Phiếu mượn    : {BorrowRecord.objects.count()}")
