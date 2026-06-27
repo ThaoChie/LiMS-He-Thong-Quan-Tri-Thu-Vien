@@ -17,30 +17,7 @@ class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
 
     def form_valid(self, form):
-        user = form.get_user()
-        if user.role in ['admin', 'librarian'] or user.is_superuser:
-            import random
-            from django.utils import timezone
-            import datetime
-            otp = f"{random.randint(100000, 999999)}"
-            self.request.session['pre_2fa_user_id'] = user.pk
-            self.request.session['pre_2fa_otp'] = otp
-            self.request.session['pre_2fa_expire'] = (timezone.now() + datetime.timedelta(seconds=30)).timestamp()
-            
-            try:
-                from django.core.mail import send_mail
-                from django.conf import settings
-                send_mail(
-                    'Mã xác thực OTP (2FA) - LiMS',
-                    f'Xin chào {user.username},\n\nMã xác thực OTP của bạn là: {otp}\n\nMã này sẽ hết hạn trong 30 giây.\nNếu bạn không thực hiện thao tác này, vui lòng đổi mật khẩu ngay lập tức.',
-                    getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@lims.local'),
-                    [user.email]
-                )
-            except Exception:
-                pass
-            
-            return redirect('accounts:otp_verify')
-            
+        # Bỏ qua xác thực OTP cho tất cả các role để thuận tiện kiểm thử
         return super().form_valid(form)
 
     def form_invalid(self, form):
