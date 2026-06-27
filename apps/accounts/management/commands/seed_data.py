@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.db import transaction
 
 from apps.accounts.models import CustomUser
-from apps.catalog.models import Category, Author, Publisher, Book
+from apps.catalog.models import Category, Publisher, Book
 from apps.circulation.models import BorrowRecord, Reservation, FineReceipt
 from apps.proposals.models import BookProposal
 from apps.reviews.models import Review
@@ -277,10 +277,10 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("🗑  Đang xóa dữ liệu cũ..."))
             Review.objects.all().delete()
             BookProposal.objects.all().delete()
+            FineReceipt.objects.all().delete()
             Reservation.objects.all().delete()
             BorrowRecord.objects.all().delete()
             Book.objects.all().delete()
-            Author.objects.all().delete()
             Publisher.objects.all().delete()
             Category.objects.all().delete()
             self.stdout.write(self.style.WARNING("   Đã xóa xong.\n"))
@@ -299,19 +299,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"   ✓ {cat.name}")
         self.stdout.write(self.style.SUCCESS(f"   → {len(cat_map)} thể loại\n"))
 
-        # 2. Authors
-        self.stdout.write("✍️  Tạo tác giả...")
-        author_map = {}
-        for data in AUTHORS:
-            author, created = Author.objects.get_or_create(
-                name=data["name"], defaults={"biography": data["biography"]}
-            )
-            author_map[data["name"]] = author
-            if created:
-                self.stdout.write(f"   ✓ {author.name}")
-        self.stdout.write(self.style.SUCCESS(f"   → {len(author_map)} tác giả\n"))
-
-        # 3. Publishers
+        # 2. Publishers
         self.stdout.write("🏢 Tạo nhà xuất bản...")
         pub_map = {}
         for data in PUBLISHERS:
@@ -335,14 +323,12 @@ class Command(BaseCommand):
                 "total_copies": data["copies"],
                 "available_copies": data["copies"],
                 "status": "available",
+                "authors": ", ".join(data["author_names"]),
             }
             book, created = Book.objects.get_or_create(
                 title=data["title"], defaults={**defaults, "isbn": data.get("isbn")}
             )
             if created:
-                for aname in data["author_names"]:
-                    if aname in author_map:
-                        book.authors.add(author_map[aname])
                 self.stdout.write(f"   ✓ {book.title[:60]}")
             book_map[data["title"]] = book
         self.stdout.write(self.style.SUCCESS(f"   → {len(book_map)} cuốn sách\n"))

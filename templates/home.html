@@ -42,7 +42,7 @@
                         </div>
                         <div class="card-body">
                             <div class="book-title">{{ book.title }}</div>
-                            <div class="book-author">{{ book.authors.all|join:", " }}</div>
+                            <div class="book-author">{{ book.authors }}</div>
                             <div class="book-meta mt-2">
                                 <span class="badge badge-{{ book.status }}">{{ book.get_status_display }}</span>
                                 <small class="text-muted ms-2">{{ book.available_copies }}/{{ book.total_copies }}</small>
