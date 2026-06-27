@@ -1,0 +1,210 @@
+<mxfile host="app.diagrams.net" modified="2026-05-26T13:21:00.000Z" agent="draw.io" version="24.0.0" type="device">
+  <diagram name="SD_DatTruoc" id="sd_dattruoc_001">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        
+        <mxCell id="99" value="&lt;b&gt;Sequence Diagram: Đặt Trước Sách&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=16;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="500" y="5" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        
+        
+        <mxCell id="2" value="&lt;b&gt;Sinh viên&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="" style="line;strokeWidth=1;dashed=1;strokeColor=#999999;endArrow=none;" vertex="1" parent="1">
+          <mxGeometry x="139" y="80" width="1" height="1100" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="4" value="&lt;b&gt;Giao diện Web&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="340" y="40" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="" style="line;strokeWidth=1;dashed=1;strokeColor=#999999;endArrow=none;" vertex="1" parent="1">
+          <mxGeometry x="404" y="80" width="1" height="1100" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="6" value="&lt;b&gt;Controller&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="610" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="" style="line;strokeWidth=1;dashed=1;strokeColor=#999999;endArrow=none;" vertex="1" parent="1">
+          <mxGeometry x="669" y="80" width="1" height="1100" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="8" value="&lt;b&gt;Service&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="880" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="line;strokeWidth=1;dashed=1;strokeColor=#999999;endArrow=none;" vertex="1" parent="1">
+          <mxGeometry x="939" y="80" width="1" height="1100" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="10" value="&lt;b&gt;Database&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="" style="line;strokeWidth=1;dashed=1;strokeColor=#999999;endArrow=none;" vertex="1" parent="1">
+          <mxGeometry x="1209" y="80" width="1" height="1100" as="geometry" />
+        </mxCell>
+
+        
+        
+        <mxCell id="20" value="1: Bấm 'Đặt trước sách'" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="145" y="130" as="sourcePoint" />
+            <mxPoint x="398" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="14" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="133" y="120" width="12" height="40" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="21" value="2: POST /catalog/books/{id}/reserve/" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="170" as="sourcePoint" />
+            <mxPoint x="663" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="15" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="398" y="120" width="12" height="70" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="22" value="3: create_reservation(user, book_id)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="675" y="210" as="sourcePoint" />
+            <mxPoint x="933" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="16" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="663" y="160" width="12" height="60" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="17" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="933" y="200" width="12" height="110" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="23" value="4: Check book.available_copies == 0" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="945" y="240" as="sourcePoint" />
+            <mxPoint x="1203" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="24" value="Trả về kết quả" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;endFill=0;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1203" y="270" as="sourcePoint" />
+            <mxPoint x="945" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="25" value="5: Check existing reservation for this user+book" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="945" y="300" as="sourcePoint" />
+            <mxPoint x="1203" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="30" value="&lt;b&gt;alt&lt;/b&gt; [Hợp lệ - sách hết &amp;amp; chưa đặt trước]" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 5;fillColor=none;fontSize=11;verticalAlign=top;align=left;spacingLeft=5;spacingTop=2;strokeColor=#009900;" vertex="1" parent="1">
+          <mxGeometry x="60" y="340" width="1220" height="300" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="31" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="933" y="370" width="12" height="100" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="32" value="6: Check user max_reservations limit" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="945" y="390" as="sourcePoint" />
+            <mxPoint x="1203" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="33" value="7: INSERT Reservation(user, book, status='waiting', queue_position)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="945" y="425" as="sourcePoint" />
+            <mxPoint x="1203" y="425" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="34" value="Xác nhận tạo thành công" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;endFill=0;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1203" y="455" as="sourcePoint" />
+            <mxPoint x="945" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="35" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="663" y="480" width="12" height="60" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="36" value="8: Success - Reservation created" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;endFill=0;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="663" y="505" as="sourcePoint" />
+            <mxPoint x="410" y="505" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="37" value="9: 'Đặt trước thành công! Vị trí hàng đợi: N'" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;endFill=0;rounded=0;fontSize=11;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="398" y="530" as="sourcePoint" />
+            <mxPoint x="145" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="38" value="" style="line;strokeWidth=1;dashed=1;strokeColor=#009900;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="555" width="1220" height="1" as="geometry" />
+        </mxCell>
+        <mxCell id="39" value="&lt;i&gt;[Không hợp lệ - sách còn sẵn hoặc đã đặt trước]&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=11;fontColor=#CC0000;" vertex="1" parent="1">
+          <mxGeometry x="70" y="560" width="290" height="25" as="geometry" />
+        </mxCell>
+
+        
+        <mxCell id="40" value="Error response (400)" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;endFill=0;rounded=0;fontSize=11;strokeColor=#CC0000;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="663" y="600" as="sourcePoint" />
+            <mxPoint x="410" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="41" value="'Không thể đặt trước: sách vẫn còn sẵn hoặc bạn đã đặt trước'" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;endFill=0;rounded=0;fontSize=11;strokeColor=#CC0000;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="398" y="625" as="sourcePoint" />
+            <mxPoint x="145" y="625" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        
+        <mxCell id="90" value="&lt;b&gt;Ghi chú:&lt;/b&gt;&lt;br&gt;- Sinh viên chỉ có thể đặt trước khi sách đã hết&lt;br&gt;- Mỗi sinh viên chỉ đặt trước 1 lần cho mỗi sách&lt;br&gt;- Khi sách được trả, người đặt trước đầu tiên sẽ được thông báo" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="80" y="680" width="350" height="90" as="geometry" />
+        </mxCell>
+
+      <mxCell id="100" value="&lt;b&gt;Sinh viên&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1"><mxGeometry x="80" y="1240.0" width="120" height="40" as="geometry" /></mxCell><mxCell id="101" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#999999;zIndex=-1;" edge="1" parent="1"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="140.0" y="1240.0" as="sourcePoint" /><mxPoint x="140.0" y="80.0" as="targetPoint" /></mxGeometry></mxCell><mxCell id="102" value="&lt;b&gt;Giao diện Web&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1"><mxGeometry x="340" y="1240.0" width="130" height="40" as="geometry" /></mxCell><mxCell id="103" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#999999;zIndex=-1;" edge="1" parent="1"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="405.0" y="1240.0" as="sourcePoint" /><mxPoint x="405.0" y="80.0" as="targetPoint" /></mxGeometry></mxCell><mxCell id="104" value="&lt;b&gt;Controller&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1"><mxGeometry x="610" y="1240.0" width="120" height="40" as="geometry" /></mxCell><mxCell id="105" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#999999;zIndex=-1;" edge="1" parent="1"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="670.0" y="1240.0" as="sourcePoint" /><mxPoint x="670.0" y="80.0" as="targetPoint" /></mxGeometry></mxCell><mxCell id="106" value="&lt;b&gt;Service&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1"><mxGeometry x="880" y="1240.0" width="120" height="40" as="geometry" /></mxCell><mxCell id="107" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#999999;zIndex=-1;" edge="1" parent="1"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="940.0" y="1240.0" as="sourcePoint" /><mxPoint x="940.0" y="80.0" as="targetPoint" /></mxGeometry></mxCell><mxCell id="108" value="&lt;b&gt;Database&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1150" y="1240.0" width="120" height="40" as="geometry" /></mxCell><mxCell id="109" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#999999;zIndex=-1;" edge="1" parent="1"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="1210.0" y="1240.0" as="sourcePoint" /><mxPoint x="1210.0" y="80.0" as="targetPoint" /></mxGeometry></mxCell></root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
