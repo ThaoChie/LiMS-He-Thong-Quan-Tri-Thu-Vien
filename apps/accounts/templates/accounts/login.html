@@ -18,20 +18,48 @@
             <p>Hệ thống Quản lý Thư viện</p>
         </div>
 
-        {% if form.errors %}
+        {% if locked_until %}
+        <div class="alert alert-danger py-3 text-center">
+            <i class="bi bi-lock-fill fs-3 d-block mb-2"></i>
+            <h5 class="alert-heading">Tài khoản bị tạm khóa</h5>
+            <p class="mb-2">Bạn đã nhập sai mật khẩu quá 5 lần.</p>
+            <div class="fs-4 fw-bold font-monospace" id="countdown-timer" data-until="{{ locked_until }}">--:--</div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const timerEl = document.getElementById('countdown-timer');
+                const unlockTime = parseInt(timerEl.getAttribute('data-until')) * 1000;
+                const interval = setInterval(function() {
+                    const now = new Date().getTime();
+                    const distance = unlockTime - now;
+                    if (distance < 0) {
+                        clearInterval(interval);
+                        timerEl.innerHTML = "00:00 (Đã mở khóa)";
+                        return;
+                    }
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    timerEl.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                }, 1000);
+            });
+        </script>
+        {% elif form.errors %}
         <div class="alert alert-danger py-2">
-            <i class="bi bi-exclamation-triangle me-1"></i> Tên đăng nhập hoặc mật khẩu không đúng.
+            <i class="bi bi-exclamation-triangle me-1"></i> Email hoặc mật khẩu không đúng.
         </div>
         {% endif %}
 
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
-                <label class="form-label">Tên đăng nhập</label>
+                <label class="form-label">Email</label>
                 {{ form.username }}
             </div>
             <div class="mb-4">
-                <label class="form-label">Mật khẩu</label>
+                <label class="form-label d-flex justify-content-between align-items-center">
+                    <span>Mật khẩu</span>
+                    <a href="{% url 'accounts:forgot_password' %}" class="text-decoration-none small">Quên mật khẩu?</a>
+                </label>
                 {{ form.password }}
             </div>
             <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">
@@ -39,7 +67,7 @@
             </button>
         </form>
         <div class="text-center text-muted" style="font-size:0.82rem;">
-            <i class="bi bi-shield-lock me-1"></i> Liên hệ thủ thư hoặc quản trị viên để được cấp tài khoản.
+            <i class="bi bi-shield-lock me-1"></i> Liên hệ thủ thư để được cấp tài khoản.
         </div>
     </div>
 </div>

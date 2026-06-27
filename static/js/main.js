@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Confirm Delete ---
     document.querySelectorAll('[data-confirm]').forEach(function (el) {
         el.addEventListener('click', function (e) {
-            if (!confirm(el.getAttribute('data-confirm') || 'Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n xÃ³a?')) {
+            if (!confirm(el.getAttribute('data-confirm') || 'Bạn có chắc chắn muốn xóa?')) {
                 e.preventDefault();
             }
         });

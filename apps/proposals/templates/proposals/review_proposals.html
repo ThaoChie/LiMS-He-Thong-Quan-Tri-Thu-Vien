@@ -14,12 +14,20 @@
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
-                <thead><tr><th>#</th><th>Người đề xuất</th><th>Tên sách</th><th>Tác giả</th><th>Trạng thái</th><th>Ngày</th><th>Hành động</th></tr></thead>
+                <thead><tr><th>#</th><th>ISBN</th><th>Người đề xuất</th><th>Tên sách</th><th>Tác giả</th><th>Trạng thái</th><th>Ngày</th><th>Hành động</th></tr></thead>
                 <tbody>
                 {% for p in page_obj %}
                 <tr>
                     <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
-                    <td>{{ p.user.username }}</td>
+                    <td><code class="text-primary">{{ p.isbn|default:"-" }}</code></td>
+                    <td>
+                        {% if p.grouped_users %}
+                            {{ p.grouped_users|join:", " }}
+                            {% if p.grouped_count > 1 %}<span class="badge bg-info ms-1">{{ p.grouped_count }} lượt</span>{% endif %}
+                        {% else %}
+                            {{ p.user.username }}
+                        {% endif %}
+                    </td>
                     <td class="fw-semibold"><a href="{% url 'proposals:proposal_detail' p.pk %}">{{ p.title|truncatechars:40 }}</a></td>
                     <td>{{ p.author_name|default:"-" }}</td>
                     <td><span class="badge badge-{{ p.status }}">{{ p.get_status_display }}</span></td>
@@ -40,11 +48,32 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="7" class="text-center text-muted py-4">Không có đề xuất nào.</td></tr>
+                <tr><td colspan="8" class="text-center text-muted py-4">Không có đề xuất nào.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+{% if page_obj %}
+<nav class="mt-3 d-flex justify-content-center">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}">«</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">‹</a></li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">›</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}">»</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}

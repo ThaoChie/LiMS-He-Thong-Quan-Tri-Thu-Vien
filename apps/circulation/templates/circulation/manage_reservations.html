@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Quản lý hàng đợi đặt trước{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-list-ol me-2 text-primary"></i> Danh sách Đặt trước</h5>
+            <form method="GET" class="d-flex gap-2">
+                <select name="status" class="form-select shadow-sm border-0 bg-light" onchange="this.form.submit()">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="waiting" {% if status_filter == 'waiting' %}selected{% endif %}>Đang đợi xếp hàng</option>
+                    <option value="notified" {% if status_filter == 'notified' %}selected{% endif %}>Đã có sách (Đã thông báo)</option>
+                    <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Hoàn tất (Đã mượn)</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Đã hủy</option>
+                    <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Hết hạn nhận</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-secondary">
+                    <tr>
+                        <th class="border-0 py-3 ps-3">Độc giả</th>
+                        <th class="border-0 py-3">Tựa sách</th>
+                        <th class="border-0 py-3">Ngày đặt</th>
+                        <th class="border-0 py-3">Trạng thái</th>
+                        <th class="border-0 py-3 text-end pe-3">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in page_obj %}
+                    <tr>
+                        <td class="ps-3 py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width:40px; height:40px; font-weight:600;">
+                                    {{ res.user.username|make_list|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="text-dark fw-medium">{{ res.user.get_full_name|default:res.user.username }}</div>
+                                    <div class="text-muted" style="font-size:0.85rem">{{ res.user.student_code }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="fw-medium text-dark py-3">{{ res.book.title }}</td>
+                        <td class="text-muted py-3">{{ res.reserved_at|date:"d/m/Y H:i" }}</td>
+                        <td class="py-3">
+                            {% if res.status == 'waiting' %}
+                            <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">Đang đợi (Hàng đợi #{{ res.queue_position }})</span>
+                            {% elif res.status == 'notified' %}
+                            <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill">Đã có sách</span>
+                            {% elif res.status == 'completed' %}
+                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Đã mượn</span>
+                            {% elif res.status == 'cancelled' %}
+                            <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">Đã hủy</span>
+                            {% else %}
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill">{{ res.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-3 py-3">
+                            {% if res.status == 'waiting' or res.status == 'notified' %}
+                            <form method="POST" action="{% url 'circulation:staff_cancel_reservation' res.pk %}" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đặt trước này của độc giả?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm"><i class="bi bi-x-circle me-1"></i>Hủy</button>
+                            </form>
+                            {% else %}
+                            <span class="text-muted" style="font-size:0.85rem">Không có</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted bg-light bg-opacity-50">
+                            <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary opacity-50"></i>
+                            Không có dữ liệu hàng đợi.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav class="mt-4 pt-3 border-top">
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link rounded-pill px-3 me-2" href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}">Trước</a></li>
+                {% endif %}
+                
+                <li class="page-item active"><span class="page-link rounded-circle d-flex justify-content-center align-items-center mx-1" style="width: 38px; height: 38px;">{{ page_obj.number }}</span></li>
+                
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link rounded-pill px-3 ms-2" href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}">Sau</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

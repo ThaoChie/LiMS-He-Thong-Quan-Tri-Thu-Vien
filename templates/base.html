@@ -31,21 +31,27 @@
         <a href="{% url 'catalog:book_list' %}" class="nav-link"><i class="bi bi-book"></i> Danh sách sách</a>
         <a href="{% url 'catalog:book_search' %}" class="nav-link"><i class="bi bi-search"></i> Tìm kiếm</a>
 
+        {% if user.role == 'reader' or user.role == 'lecturer' %}
         <div class="nav-label">Cá nhân</div>
-        <a href="{% url 'circulation:borrow_history' %}" class="nav-link"><i class="bi bi-clock-history"></i> Lịch sử mượn</a>
+        <a href="{% url 'dashboard:user_history' %}" class="nav-link"><i class="bi bi-clock-history"></i> Lịch sử cá nhân</a>
         <a href="{% url 'circulation:reservation_list' %}" class="nav-link"><i class="bi bi-bookmark"></i> Đặt trước sách</a>
         <a href="{% url 'proposals:proposal_list' %}" class="nav-link"><i class="bi bi-lightbulb"></i> Đề xuất sách</a>
+        {% endif %}
 
-        {% if user.role == 'librarian' or user.role == 'admin' %}
-        <div class="nav-label">Quản lý</div>
-        <a href="{% url 'catalog:book_manage' %}" class="nav-link"><i class="bi bi-gear"></i> Quản lý sách</a>
-        <a href="{% url 'catalog:category_manage' %}" class="nav-link"><i class="bi bi-tags"></i> Quản lý thể loại</a>
+        {% if user.role == 'librarian' %}
+        <div class="nav-label">Nghiệp vụ Thủ thư</div>
+        <a href="{% url 'dashboard:admin_dashboard' %}" class="nav-link"><i class="bi bi-bar-chart"></i> Thống kê nghiệp vụ</a>
+        <a href="{% url 'circulation:counter_borrow' %}" class="nav-link"><i class="bi bi-upc-scan"></i> Mượn sách tại quầy</a>
         <a href="{% url 'circulation:manage_borrows' %}" class="nav-link"><i class="bi bi-arrow-left-right"></i> Quản lý mượn/trả</a>
+        <a href="{% url 'circulation:manage_reservations' %}" class="nav-link"><i class="bi bi-list-ul"></i> Quản lý hàng đợi</a>
         <a href="{% url 'proposals:review_proposals' %}" class="nav-link"><i class="bi bi-check-circle"></i> Duyệt đề xuất</a>
         {% endif %}
 
-        {% if user.role == 'admin' %}
-        <div class="nav-label">Hệ thống</div>
+        {% if user.role == 'admin' or user.is_superuser %}
+        <div class="nav-label">Quản trị Hệ thống</div>
+        <a href="{% url 'dashboard:admin_dashboard' %}" class="nav-link"><i class="bi bi-bar-chart"></i> Dashboard tổng quan</a>
+        <a href="{% url 'catalog:book_manage' %}" class="nav-link"><i class="bi bi-book-half"></i> Quản lý sách</a>
+        <a href="{% url 'catalog:category_manage' %}" class="nav-link"><i class="bi bi-tags"></i> Quản lý thể loại</a>
         <a href="{% url 'accounts:user_list' %}" class="nav-link"><i class="bi bi-people"></i> Quản lý người dùng</a>
         {% endif %}
     </nav>
@@ -99,6 +105,7 @@
         {% block content %}{% endblock %}
     </div>
 </main>
+
 {% else %}
 <!-- Non-authenticated: no sidebar -->
 {% if messages %}
