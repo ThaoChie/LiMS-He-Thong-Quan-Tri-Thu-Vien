@@ -1,252 +1,141 @@
-## 📚 LiMS — Hệ thống Quản lý Thư viện
+# 📚 LiMS — Hệ thống Quản lý Thư viện Đại học (Library Management System)
 
-LiMS (Library Management System) là hệ thống quản lý thư viện tích hợp dành cho trường đại học, hỗ trợ sinh viên mượn/trả sách, đặt trước, đề xuất bổ sung sách và đánh giá tài liệu.
+<div align="center">
 
----
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-4.2-092E20?style=for-the-badge&logo=django&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-Alpine-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Celery](https://img.shields.io/badge/Celery-5.3-37814A?style=for-the-badge&logo=celery&logoColor=white)
 
-## 🗂 Mục lục
+**LiMS** là nền tảng quản lý thư viện số tích hợp hiện đại chuẩn nghiệp vụ **SRS v4.0 / v5.0**, được thiết kế tối ưu cho các trường đại học. Hệ thống giải quyết bài toán tự động hóa luồng lưu thông sách, chuẩn hóa quy trình đề xuất bổ sung tài liệu theo chuẩn quốc tế **ISBN**, và áp dụng mô hình **Quản lý Tín nhiệm (Trust & Violation Model)** hiện đại thay thế hoàn toàn hình thức thu phí phạt truyền thống.
 
-- [Giới thiệu](#-giới-thiệu)
-- [Tính năng](#-tính-năng)
-- [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
-- [Yêu cầu cài đặt](#-yêu-cầu-cài-đặt)
-- [Hướng dẫn chạy](#-hướng-dẫn-chạy)
-- [Tài khoản mẫu](#-tài-khoản-mẫu)
-- [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
-- [Lệnh hữu ích](#-lệnh-hữu-ích)
+</div>
 
 ---
 
-## 📖 Giới thiệu
+## 🌟 Điểm nổi bật trong chuẩn nghiệp vụ (SRS v4.0 / v5.0)
 
-LiMS được xây dựng theo mô hình **Client–Server** sử dụng Django làm backend và template engine, thiết kế giao diện **Holographic 3D Light Mode** hiện đại, responsive hoàn toàn từ mobile đến desktop.
-
-| Thành phần   | Công nghệ                                     |
-| ------------ | --------------------------------------------- |
-| Backend      | Django 4.2 (Python 3.11)                      |
-| Database     | MySQL 8.0                                     |
-| Task Queue   | Celery + Redis                                |
-| Vector Store | ChromaDB (dành cho RAG — mở rộng sau)         |
-| Frontend     | Django Templates + Bootstrap 5.3 + Vanilla JS |
-| Container    | Docker + Docker Compose                       |
+- 🔒 **Bảo mật & Phân quyền chặt chẽ (BR-30):** Khách vãng lai (Guest) chỉ được phép truy cập cổng đăng nhập. Mọi thao tác tra cứu, tìm kiếm và xem chi tiết sách bắt buộc phải xác thực tài khoản hợp lệ.
+- 📦 **Chuẩn hóa Đề xuất & Phê duyệt theo ISBN (UC05, UC06):** Gom nhóm thông minh các đề xuất sách trùng mã **ISBN**. Hỗ trợ tính năng **Mass Approve** giúp Thủ thư phê duyệt đồng loạt tất cả yêu cầu cùng một đầu sách chỉ với 1 thao tác và gửi email thông báo tự động cho các giảng viên/sinh viên liên quan.
+- 🛡️ **Mô hình Quản lý Tín nhiệm - Triệt tiêu Phí phạt (BR-13, BR-18, BR-19, BR-23):** Loại bỏ hoàn toàn các khâu thu tiền phạt trễ hạn rắc rối. Hệ thống ghi nhận trạng thái vi phạm (**Overdue / Reported Lost**) và tự động khóa quyền mượn sách (`can_borrow = False`) cũng như chặn đặt trước tài liệu đối với độc giả vi phạm cho đến khi hoàn tất bồi thường và được Thủ thư gỡ vi phạm.
+- 📊 **Dashboard Thống kê Thời gian thực:** Cung cấp chỉ số trực quan về số lượng vi phạm tín nhiệm, tỷ lệ độc giả bị khóa tài khoản, và hiệu quả phê duyệt đề xuất mua sách theo mã ISBN.
 
 ---
 
-## ✨ Tính năng
+## 🛠 Tech Stack (Công nghệ sử dụng)
 
-### 👤 Phân quyền 3 cấp
-
-| Role                                 | Mô tả                                                 |
-| ------------------------------------ | ----------------------------------------------------- |
-| **Sinh viên** (reader)               | Tìm kiếm sách, mượn/trả, đặt trước, đề xuất, đánh giá |
-| **Giảng viên / Thủ thư** (librarian) | Quản lý sách, duyệt mượn/trả, duyệt đề xuất           |
-| **Quản trị viên** (admin)            | Toàn quyền + quản lý tài khoản người dùng             |
-
-### 📚 Quản lý danh mục
-
-- Thêm/sửa/xóa sách, tác giả, nhà xuất bản, thể loại
-- Upload ảnh bìa và file PDF
-- Tìm kiếm theo tên, tác giả, ISBN, thể loại, trạng thái
-
-### 🔄 Mượn / Trả sách
-
-- Sinh viên gửi yêu cầu mượn → Thủ thư duyệt → Mượn → Trả
-- Theo dõi hạn trả, cảnh báo quá hạn
-- Lịch sử mượn sách cá nhân
-
-### 🔖 Đặt trước
-
-- Đặt trước khi sách không có sẵn (hạn 3 ngày)
-- Quản lý danh sách đặt trước cá nhân
-
-### 💡 Đề xuất sách
-
-- Sinh viên đề xuất mua sách mới
-- Thủ thư/Admin duyệt hoặc từ chối kèm phản hồi
-
-### ⭐ Đánh giá sách
-
-- Đánh giá 1–5 sao + nhận xét (chỉ sau khi đã mượn và trả)
-- Hiển thị điểm trung bình trên trang chi tiết sách
+| Thành phần | Công nghệ / Thư viện | Vai trò & Mục đích |
+|---|---|---|
+| **Backend Core** | Django 4.2 (Python 3.11) | Xử lý kiến trúc MVT, bảo mật, ORM và định tuyến nghiệp vụ |
+| **Database** | MySQL 8.0 | Lưu trữ cấu trúc quan hệ chặt chẽ đảm bảo tính toàn vẹn dữ liệu (ACID) |
+| **Async Task / Queue** | Celery 5.3 + Redis Alpine | Xử lý hàng đợi gửi Email thông báo mượt mà, chạy Cronjob kiểm tra hạn trả sách |
+| **Frontend UI/UX** | Bootstrap 5.3 + HTMX + Vanilla JS | Giao diện hiện đại (Glassmorphism / Cards), tương tác bất đồng bộ không cần reload trang |
+| **Containerization** | Docker & Docker Compose | Đóng gói toàn bộ dịch vụ (Web, DB, Redis, Celery, ChromaDB) chạy nhất quán trên mọi môi trường |
 
 ---
 
-## 🏗 Kiến trúc hệ thống
+## 🏗 Kiến trúc Hệ thống
 
-```mermaid
-graph TD
-
-    subgraph Docker_Network
-        WEB["lims_web<br/>Django<br/>:8000"]
-        DB["lims_db<br/>MySQL 8.0<br/>:3306"]
-        REDIS["lims_redis<br/>Redis Alpine<br/>:6379"]
-        CELERY["lims_celery<br/>Worker"]
-        CHROMA["lims_chromadb<br/>ChromaDB<br/>:8001"]
-
-        WEB <--> DB
-        WEB --> CELERY
-        REDIS --> CHROMA
-    end
+```
+┌──────────────────────────────────────────────────────────────┐
+│                        Docker Network                        │
+│                                                              │
+│  ┌──────────────┐    ┌──────────────┐    ┌────────────────┐  │
+│  │   lims_web   │    │   lims_db    │    │   lims_redis   │  │
+│  │  Django Web  │◄──►│  MySQL 8.0   │    │  Redis Broker  │  │
+│  │  Port: 8000  │    │  Port: 3306  │    │   Port: 6379   │  │
+│  └──────┬───────┘    └──────────────┘    └───────┬────────┘  │
+│         │                                        │           │
+│  ┌──────▼───────┐                        ┌───────▼────────┐  │
+│  │ lims_celery  │                        │ lims_chromadb  │  │
+│  │ Celery Worker│                        │ Vector Storage │  │
+│  │ Async Tasks  │                        │   Port: 8001   │  │
+│  └──────────────┘                        └────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 💻 Yêu cầu cài đặt
+## 👥 Phân quyền Người dùng (Roles)
 
-Máy tính chỉ cần cài đúng **2 thứ**:
+1. **👨‍🎓 Sinh viên / Giảng viên (Reader):**
+   - Tra cứu danh mục sách, xem tình trạng sẵn có.
+   - Gửi yêu cầu mượn sách, đặt trước tài liệu khi sách đang hết.
+   - Đề xuất mua sách mới theo mã ISBN.
+   - Viết đánh giá & cho điểm sao (chỉ áp dụng với sách đã mượn và trả hoàn tất).
+   - Theo dõi điểm tín nhiệm và lịch sử vi phạm cá nhân.
 
-| Phần mềm           | Phiên bản tối thiểu | Link tải                                       |
-| ------------------ | ------------------- | ---------------------------------------------- |
-| **Docker Desktop** | 24.x trở lên        | https://www.docker.com/products/docker-desktop |
-| **Git**            | bất kỳ              | https://git-scm.com/downloads                  |
+2. **👩‍💼 Thủ thư (Librarian):**
+   - Quản lý kho sách, thể loại, nhà xuất bản.
+   - Xử lý mượn/trả sách tại quầy, kiểm tra tình trạng hư hỏng.
+   - Ghi nhận vi phạm tín nhiệm (Trả trễ / Mất sách) và thao tác **Gỡ vi phạm**.
+   - Phê duyệt đề xuất mua sách đồng loạt (Mass Approve).
 
-> **Không cần** cài Python, MySQL, hay bất kỳ thứ gì khác.  
-> Tất cả đều chạy trong Docker container.
-
----
-
-## 🚀 Hướng dẫn chạy
-
-### Bước 1 — Cài Docker Desktop
-
-1. Truy cập https://www.docker.com/products/docker-desktop
-2. Tải bản phù hợp với hệ điều hành (Windows / macOS / Linux)
-3. Cài đặt và **khởi động Docker Desktop**
-4. Đợi icon Docker ở thanh taskbar/menu bar chuyển sang màu **xanh** (running)
-
-> ⚠️ Trên Windows: Docker Desktop yêu cầu **WSL 2**. Nếu được hỏi, chọn "Install WSL 2 backend".
+3. **⚙️ Quản trị viên (Admin):**
+   - Toàn quyền giám sát hệ thống và phân quyền người dùng.
+   - Theo dõi chỉ số cảnh báo tín nhiệm & thống kê hiệu quả thư viện qua Dashboard.
 
 ---
 
-### Bước 2 — Tải mã nguồn
+## 🚀 Hướng dẫn Cài đặt & Khởi chạy (Docker)
 
-Mở **Terminal** (macOS/Linux) hoặc **PowerShell** (Windows), chạy:
+Hệ thống đã được tích hợp sẵn cấu hình Docker Compose, giúp việc triển khai chỉ mất vài phút.
 
+### 1. Yêu cầu hệ thống
+- Máy tính đã cài đặt **Docker** và **Docker Compose**.
+
+### 2. Khởi chạy hệ thống
+Mở terminal tại thư mục gốc của dự án và chạy lệnh:
 ```bash
-git clone <URL_REPOSITORY> lims_project
-cd lims_project
+docker-compose up --build -d
 ```
 
-> Nếu không dùng Git, có thể tải file ZIP từ repository rồi giải nén.
-
----
-
-### Bước 3 — Tạo file cấu hình `.env`
-
-Sao chép file mẫu:
-
+### 3. Tạo dữ liệu mẫu (Seed Data)
+Để có ngay dữ liệu test phong phú (sách, người dùng, phiếu mượn, đề xuất, vi phạm...), chạy lệnh sau:
 ```bash
-# macOS / Linux
-cp .env.example .env
-
-# Windows PowerShell
-copy .env.example .env
+docker exec lims_web python manage.py seed_data
 ```
 
-File `.env` mặc định đã dùng được ngay. Nếu muốn thay đổi mật khẩu, mở file và chỉnh sửa:
-
-```env
-# .env — Cấu hình mặc định (có thể dùng ngay)
-MYSQL_DATABASE=lims_db
-MYSQL_USER=lims_user
-MYSQL_PASSWORD=lims_password
-MYSQL_ROOT_PASSWORD=root_password
-DB_HOST=db
-DB_PORT=3306
-
-SECRET_KEY=django-insecure-change-this-in-production
-DEBUG=True
-ALLOWED_HOSTS=*
-
-CELERY_BROKER_URL=redis://redis:6379/0
-CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-CHROMADB_HOST=chromadb
-CHROMADB_PORT=8000
-
-HUGGINGFACE_API_KEY=mock_key
-```
-
----
-
-### Bước 4 — Build và khởi động
-
+### 4. Kiểm thử tự động (Unit Tests)
+Chạy bộ test kiểm chứng độ bao phủ nghiệp vụ:
 ```bash
-docker compose up -d --build
-```
-
-> Lần đầu sẽ tải Docker images (~2–5 phút tùy tốc độ mạng). Các lần sau chỉ mất vài giây.
-
-Kiểm tra tất cả container đang chạy:
-
-```bash
-docker compose ps
-```
-
-Kết quả mong đợi:
-
-```
-NAME             STATUS          PORTS
-lims_chromadb    Up              0.0.0.0:8001->8000/tcp
-lims_celery      Up
-lims_db          Up              0.0.0.0:3306->3306/tcp
-lims_redis       Up              0.0.0.0:6379->6379/tcp
-lims_web         Up              0.0.0.0:8000->8000/tcp
+docker exec lims_web python manage.py test
 ```
 
 ---
 
-### Bước 5 — Khởi tạo cơ sở dữ liệu
+## 🔑 Tài khoản Demo (Sẵn sàng trải nghiệm)
 
-Chạy lần lượt 3 lệnh sau (chỉ cần chạy **một lần duy nhất**):
+Sau khi chạy lệnh `seed_data`, hệ thống sẽ tự động khởi tạo các tài khoản chuẩn với mật khẩu chung là `password123`:
 
-```bash
-# 1. Tạo bảng trong database
-docker compose exec web python manage.py migrate
+| Vai trò | Tài khoản Đăng nhập | Mật khẩu | Ghi chú |
+|---|---|---|---|
+| **👑 Admin** | `admin` | `password123` | Quản trị viên tối cao (Đã tắt OTP 2FA để tiện demo) |
+| **👩‍💼 Thủ thư** | `librarian` | `password123` | Quản lý lưu thông & duyệt sách (Đã tắt OTP 2FA) |
+| **👨‍🏫 Giảng viên** | `lecturer1` | `password123` | Hạn mức mượn cao (5 cuốn), ưu tiên đề xuất |
+| **👨‍🎓 Sinh viên** | `student1` | `password123` | Hạn mức mượn chuẩn (3 cuốn) |
+| **👨‍🎓 Sinh viên** | `student2` | `password123` | Tài khoản sinh viên thứ 2 |
 
-# 2. Tạo tài khoản mẫu (admin, giảng viên, sinh viên)
-docker compose exec web python manage.py seed_users
+> 💡 **Lưu ý kiểm thử:** Để tạo sự thuận tiện tối đa cho việc demo nghiệm thu đồ án, tính năng gửi mã xác thực 2 bước (OTP 2FA) qua email cho role Admin và Thủ thư đã được **tạm thời đăng nhập thẳng**.
 
-# 3. Tạo dữ liệu mẫu (sách, mượn trả, đề xuất, đánh giá...)
-docker compose exec web python manage.py seed_data
+---
+
+## 📁 Cấu trúc Thư mục
+
+```text
+lims_project/
+├── apps/
+│   ├── accounts/          # Quản lý người dùng, phân quyền, đăng nhập & OTP
+│   ├── catalog/           # Quản lý đầu sách, danh mục, kiểm soát quyền Guest
+│   ├── circulation/       # Nghiệp vụ mượn/trả, đặt trước, quản lý vi phạm tín nhiệm
+│   ├── proposals/         # Nghiệp vụ đề xuất mua sách theo ISBN & Mass Approve
+│   ├── reviews/           # Đánh giá & bình luận sách
+│   └── dashboard/         # Thống kê quản trị & lịch sử tín nhiệm cá nhân
+├── lims_project/          # Cấu hình core Django, Celery setup
+├── templates/             # Giao diện tổng thể Bootstrap 5 + HTMX
+├── media/                 # Lưu trữ ảnh bìa sách, tài liệu tải lên
+├── docker-compose.yml     # Cấu hình triển khai đa container
+└── README.md              # Tài liệu giới thiệu hệ thống
 ```
-
----
-
-### Bước 6 — Truy cập ứng dụng
-
-| URL                                       | Mô tả                   |
-| ----------------------------------------- | ----------------------- |
-| **http://localhost:8000**                 | Trang chủ hệ thống LiMS |
-| **http://localhost:8000/accounts/login/** | Trang đăng nhập         |
-| **http://localhost:8000/admin/**          | Django Admin panel      |
-
-🎉 **Xong!** Hệ thống đã sẵn sàng.
-
----
-
-## 🔑 Tài khoản mẫu
-
-### Quản trị viên
-
-| Username | Mật khẩu    | Quyền               |
-| -------- | ----------- | ------------------- |
-| `admin`  | `Admin@123` | Toàn quyền hệ thống |
-
-### Giảng viên / Thủ thư
-
-| Username    | Mật khẩu        | Khoa                     |
-| ----------- | --------------- | ------------------------ |
-| `gv_nguyen` | `GiangVien@123` | Khoa Công nghệ Thông tin |
-| `gv_tran`   | `GiangVien@123` | Khoa Kinh tế             |
-
-### Sinh viên
-
-| Username   | Mật khẩu       |
-| ---------- | -------------- |
-| `sv_an`    | `SinhVien@123` |
-| `sv_binh`  | `SinhVien@123` |
-| `sv_cuong` | `SinhVien@123` |
-| `sv_dung`  | `SinhVien@123` |
-
----
