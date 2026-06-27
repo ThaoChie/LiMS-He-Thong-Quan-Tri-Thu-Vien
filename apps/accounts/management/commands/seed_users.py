@@ -84,7 +84,7 @@ SAMPLE_USERS = [
 
 
 class Command(BaseCommand):
-    help = "Seed tài khoản mẫu cho hệ thống LiMS"
+    help = "Seed tài khoản mẫu cho hệ thống VietNhatLiMS"
 
     def add_arguments(self, parser):
         parser.add_argument(

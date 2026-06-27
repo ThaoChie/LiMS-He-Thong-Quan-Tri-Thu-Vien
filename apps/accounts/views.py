@@ -33,7 +33,7 @@ class CustomLoginView(LoginView):
                 from django.core.mail import send_mail
                 from django.conf import settings
                 send_mail(
-                    'Mã xác thực OTP (2FA) - LiMS',
+                    'Mã xác thực OTP (2FA) - VietNhatLiMS',
                     f'Xin chào {user.username},\n\nMã xác thực OTP của bạn là: {otp}\n\nMã này sẽ hết hạn trong 30 giây.\nNếu bạn không thực hiện thao tác này, vui lòng đổi mật khẩu ngay lập tức.',
                     getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@lims.local'),
                     [user.email]
@@ -309,7 +309,7 @@ def otp_resend_view(request):
             from django.core.mail import send_mail
             from django.conf import settings
             send_mail(
-                'Mã xác thực OTP (2FA) - LiMS (Gửi lại)',
+                'Mã xác thực OTP (2FA) - VietNhatLiMS (Gửi lại)',
                 f'Xin chào {user.username},\n\nMã xác thực OTP MỚI của bạn là: {otp}\n\nMã này sẽ hết hạn trong 30 giây.\nNếu bạn không thực hiện thao tác này, vui lòng đổi mật khẩu ngay lập tức.',
                 getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@lims.local'),
                 [user.email]
@@ -343,7 +343,7 @@ def forgot_password_view(request):
                     from django.core.mail import send_mail
                     from django.conf import settings
                     send_mail(
-                        'Mã xác thực Quên Mật khẩu - LiMS',
+                        'Mã xác thực Quên Mật khẩu - VietNhatLiMS',
                         f'Xin chào {user.username},\n\nMã xác thực OTP của bạn là: {otp}\n\nMã này sẽ hết hạn trong 30 giây.\nNếu bạn không yêu cầu đổi mật khẩu, vui lòng bỏ qua email này.',
                         getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@lims.local'),
                         [user.email]
@@ -404,7 +404,7 @@ def forgot_password_resend_view(request):
             from django.core.mail import send_mail
             from django.conf import settings
             send_mail(
-                'Mã xác thực Quên Mật khẩu - LiMS (Gửi lại)',
+                'Mã xác thực Quên Mật khẩu - VietNhatLiMS (Gửi lại)',
                 f'Xin chào {user.username},\n\nMã xác thực OTP MỚI của bạn là: {otp}\n\nMã này sẽ hết hạn trong 30 giây.',
                 getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@lims.local'),
                 [user.email]

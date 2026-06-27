@@ -1,6 +1,6 @@
 """
 Management command: seed_data
-Tạo bộ dữ liệu mẫu đầy đủ cho hệ thống LiMS để kiểm thử các chức năng.
+Tạo bộ dữ liệu mẫu đầy đủ cho hệ thống VietNhatLiMS để kiểm thử các chức năng.
 Bao gồm: Category, Author, Publisher, Book, BorrowRecord, Reservation, BookProposal, Review
 """
 import random
@@ -262,7 +262,7 @@ REVIEW_COMMENTS = [
 
 
 class Command(BaseCommand):
-    help = "Tạo bộ dữ liệu mẫu đầy đủ cho hệ thống LiMS"
+    help = "Tạo bộ dữ liệu mẫu đầy đủ cho hệ thống VietNhatLiMS"
 
     def add_arguments(self, parser):
         parser.add_argument(
