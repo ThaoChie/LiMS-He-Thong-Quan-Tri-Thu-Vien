@@ -61,7 +61,7 @@
 ### UC03b – Xem danh sách & Chi tiết Người dùng
 | Mã TC | Tên Test Case / Mục tiêu | Tiền điều kiện | Các bước thực hiện | Input Data | Kết quả mong đợi (Expected Result) | Loại TC | Ưu tiên |
 |:---|:---|:---|:---|:---|:---|:---:|:---:|
-| **TC_03B_HP01** | lọc danh sách người dùng theo vai trò (Role filter) | Admin mở trang Quản lý người dùng | 1. Chọn bộ lọc "Thủ thư"<br>2. Bấm Lọc | `role="librarian"` | Bảng chỉ hiển thị các tài khoản có vai trò Thủ thư. | Happy | P2 |
+| **TC_03B_HP01** | Lọc danh sách người dùng theo vai trò (Role filter) | Admin mở trang Quản lý người dùng | 1. Chọn bộ lọc "Thủ thư"<br>2. Bấm Lọc | `role="librarian"` | Bảng chỉ hiển thị các tài khoản có vai trò Thủ thư. | Happy | P2 |
 | **TC_03B_HP02** | Tìm kiếm nhanh tài khoản theo họ tên hoặc mã SV | Có 100 users trong hệ thống | 1. Nhập từ khóa vào ô tìm kiếm nhanh | `q="Nguyễn Văn A"` | Trả về kết quả chính xác không reload trang (HTMX search). | Happy | P2 |
 
 ### UC03c – Cập nhật thông tin Người dùng & UC03d – Kích hoạt / Vô hiệu hóa Tài khoản
@@ -83,7 +83,7 @@
 ### UC04a – Thêm mới Sách & UC18 – Quản lý Danh mục (Category/Publisher)
 | Mã TC | Tên Test Case / Mục tiêu | Tiền điều kiện | Các bước thực hiện | Input Data | Kết quả mong đợi (Expected Result) | Loại TC | Ưu tiên |
 |:---|:---|:---|:---|:---|:---|:---:|:---:|
-| **TC_04A_HP01** | Thủ thư thêm sách mới thành công kèm ảnh bìa | Đăng nhập `librarian` | 1. Nhập Tiền đề, ISBN, Tác giả, Thể loại, Số lượng<br>2. Upload file ảnh bìa `.jpg`<br>3. Lưu | `isbn="978604123"`<br>`copies=10` | Sách được tạo mới với `total_copies=10`, `available_copies=10`. Ảnh bìa lưu đúng vào thư mục `/media/books/`. | Happy | P1 |
+| **TC_04A_HP01** | Thủ thư thêm sách mới thành công kèm ảnh bìa | Đăng nhập `librarian` | 1. Nhập Tiêu đề, ISBN, Tác giả, Thể loại, Số lượng<br>2. Upload file ảnh bìa `.jpg`<br>3. Lưu | `isbn="978604123"`<br>`copies=10` | Sách được tạo mới với `total_copies=10`, `available_copies=10`. Ảnh bìa lưu đúng vào thư mục `/media/books/`. | Happy | P1 |
 | **TC_04A_EX01** | Chặn thêm sách có số lượng bản sao âm (`total_copies < 0`) | Mở form thêm sách | 1. Nhập số lượng tổng là `-5`<br>2. Bấm Lưu | `copies=-5` | Client/Server validation chặn lại: "Số lượng sách phải là số nguyên dương". | Exception | P2 |
 | **TC_18_HP01** | Thêm nhanh Thể loại sách mới trực tiếp từ Modal | Đang ở form thêm sách | 1. Click icon (+) cạnh ô Thể loại<br>2. Nhập tên thể loại "AI & Data"<br>3. Bấm Lưu | `name="AI & Data"` | Thể loại mới được tạo nhanh qua AJAX và tự động được chọn vào ô dropdown mà không mất dữ liệu đang gõ dở. | UI/UX | P2 |
 
@@ -144,9 +144,6 @@
 
 ## NHÓM 6: LƯU THÔNG SÁCH & QUẢN LÝ TÍN NHIỆM
 
-### UC09 — Xử lý Mượn sách tại quầy & Kiểm soát Tín nhiệm (Khái quát 22 Test Cases chuyên sâu)
-> *Ghi chú: Nhóm UC09 là nghiệp vụ lõi đã được khai thác sâu 22 kịch bản (UI01-UI05, HP01-HP05, EX01-EX07, EG01-EG05) ở phần trên, bao gồm: Quét mã vạch tự động, kiểm tra ACID transaction, chặn người dùng bị khóa tín nhiệm (`can_borrow=False`), chặn vượt hạn mức 3 cuốn (SV) / 5 cuốn (GV), chặn mượn sách đang được giữ cho người khác trong hàng đợi 48h, xử lý Race Condition khi 2 thủ thư tranh chấp cuốn cuối cùng.*
-
 ### UC08 – Đặt trước Sách (Reserve Book) & UC16 – Quản lý Hàng đợi
 | Mã TC | Tên Test Case / Mục tiêu | Tiền điều kiện | Các bước thực hiện | Input Data | Kết quả mong đợi (Expected Result) | Loại TC | Ưu tiên |
 |:---|:---|:---|:---|:---|:---|:---:|:---:|
@@ -155,6 +152,32 @@
 | **TC_08_EX01** | Chặn đặt trước đối với độc giả đang bị khóa quyền mượn | `student_locked` có `can_borrow = False` do vi phạm | 1. Click nút "Đặt trước" trên sách B | `book_id` | Hệ thống từ chối ngay lập tức, hiển thị lỗi: "Bạn không thể đặt trước do đang bị khóa quyền mượn sách (Vi phạm tín nhiệm)" (BR-13). | Exception | P1 |
 | **TC_16_HP01** | Tự động thông báo cho người đầu hàng đợi khi có sách trả | Sách B vừa được 1 người trả lại quầy nguyên vẹn. `student1` đang xếp hàng đầu | N/A (Tự động trigger sau UC11) | N/A | Kích hoạt Celery Task gửi email thông báo cho `student1`. Khóa giữ cuốn sách trong 48h (`status=Notified`). | Background| P1 |
 | **TC_16_EG01** | Cronjob tự động hủy hàng đợi nếu quá 48h không đến nhận | `student1` được thông báo đã 49 giờ nhưng không đến mượn | 1. Chạy Celery Periodic Task `auto_expire_reservations` | N/A | Chuyển trạng thái đặt trước thành `Expired`. Mở khóa sách cho người xếp hàng tiếp theo hoặc trả về kệ công cộng (BR-31). | Cronjob | P1 |
+
+### UC09 — Xử lý Mượn sách tại quầy & Kiểm soát Tín nhiệm (22 Test Cases Chuyên sâu)
+| Mã TC | Tên Test Case / Mục tiêu | Tiền điều kiện | Các bước thực hiện | Input Data | Kết quả mong đợi | Loại TC | Ưu tiên |
+|:---|:---|:---|:---|:---|:---|:---:|:---:|
+| **TC_09_UI01** | Kiểm tra hiển thị form mượn sách và focus tự động | Truy cập trang Mượn sách | 1. Mở trang tạo phiếu mượn | N/A | Form hiển thị 2 ô nhập liệu: Mã Độc giả và Mã Sách. Con trỏ tự động focus vào ô Mã Độc giả để quét mã vạch. | UI/UX | P2 |
+| **TC_09_UI02** | Hiệu ứng tải dữ liệu khi nhập mã độc giả bằng AJAX | Form mượn sách | 1. Nhập mã độc giả hợp lệ `SV001`<br>2. Bấm Enter (hoặc tab) | `user_id="SV001"` | Hiển thị spinner nhỏ. Sau 0.5s hiển thị bảng thông tin độc giả (Tên, Tín nhiệm, Số sách đang mượn). | UI/UX | P2 |
+| **TC_09_UI03** | Hiệu ứng tải thông tin sách bằng AJAX | Form mượn sách | 1. Nhập mã ISBN/Sách hợp lệ<br>2. Bấm Enter | `book_id="B001"` | Tự động load và hiển thị Tên sách, Tác giả, Số lượng tồn kho mà không cần tải lại trang. | UI/UX | P2 |
+| **TC_09_UI04** | Hiển thị cảnh báo màu đỏ nếu tài khoản bị khóa tín nhiệm | Độc giả `SV002` bị khóa tín nhiệm | 1. Quét mã `SV002` vào ô Mã Độc giả | `user_id="SV002"` | Khung thông tin độc giả chuyển viền đỏ, hiển thị badge "BỊ KHÓA QUYỀN MƯỢN" rất to và rõ ràng. | UI/UX | P1 |
+| **TC_09_UI05** | Thông báo Toast thành công và tự động reset form sau khi mượn | Thủ thư vừa mượn xong 1 sách | 1. Bấm nút "Xác nhận mượn" | N/A | Hiện Toast "Mượn sách thành công". Form tự động xóa mã sách để thủ thư quét cuốn tiếp theo ngay lập tức. | UI/UX | P3 |
+| **TC_09_HP01** | Sinh viên mượn 1 cuốn sách thành công | `SV001` hợp lệ, sách `B001` có sẵn | 1. Quét mã SV001<br>2. Quét mã B001<br>3. Bấm Xác nhận | `SV001`, `B001` | Tạo bản ghi `BorrowRecord` (`status=borrowed`). Sách `B001` bị trừ đi 1 bản sao khả dụng. | Happy | P1 |
+| **TC_09_HP02** | Giảng viên mượn sách thành công với hạn mức cao hơn (5 cuốn) | `GV001` đang mượn 4 cuốn | 1. Quét mã GV001<br>2. Quét sách B002<br>3. Bấm Xác nhận | `GV001`, `B002` | Mượn thành công cuốn thứ 5. | Happy | P1 |
+| **TC_09_HP03** | Sinh viên mượn sách khi đã đặt trước thành công | `SV003` có Reservation cho `B003` | 1. SV003 đến quầy nhận `B003` | `SV003`, `B003` | Mượn thành công. Trạng thái Reservation chuyển sang `Completed`. | Happy | P1 |
+| **TC_09_HP04** | Mượn sách và tự động tính đúng ngày hẹn trả (14 ngày đối với SV) | Hệ thống cấu hình SV mượn 14 ngày | 1. Tạo phiếu mượn hôm nay (1/1) | N/A | Thuộc tính `due_date` tự động lưu vào CSDL là 15/1. | Happy | P1 |
+| **TC_09_HP05** | Mượn sách và tự động tính ngày hẹn trả cho GV (30 ngày) | Cấu hình GV mượn 30 ngày | 1. GV001 tạo phiếu mượn (1/1) | N/A | Thuộc tính `due_date` được tính là 31/1. | Happy | P2 |
+| **TC_09_EX01** | Chặn mượn sách nếu Độc giả không tồn tại | Nhập mã sai | 1. Nhập `SV999` (không có trong DB) | `SV999` | Lỗi: "Không tìm thấy thông tin độc giả". | Exception | P1 |
+| **TC_09_EX02** | Chặn mượn sách nếu Tài liệu không tồn tại | Nhập mã sách sai | 1. Nhập `B999` | `B999` | Lỗi: "Tài liệu không tồn tại hoặc mã vạch sai". | Exception | P1 |
+| **TC_09_EX03** | Chặn mượn khi sinh viên vượt quá hạn mức (Max 3 cuốn) | `SV001` đang mượn 3 cuốn | 1. Cố gắng mượn cuốn thứ 4 | `SV001`, `B004` | Lỗi: "Sinh viên đã đạt giới hạn mượn sách tối đa (3/3 cuốn)". | Exception | P1 |
+| **TC_09_EX04** | Chặn mượn khi tài khoản bị vô hiệu hóa quyền mượn (Vi phạm) | `SV002` có `can_borrow=False` | 1. Cố gắng mượn sách bất kỳ | `SV002` | Lỗi: "Độc giả đang bị khóa quyền mượn sách do vi phạm tín nhiệm chưa xử lý". | Exception | P1 |
+| **TC_09_EX05** | Chặn mượn sách nếu sách đã hết bản sao khả dụng (`available=0`) | Sách `B005` có `available=0` | 1. Cố gắng mượn `B005` | `B005` | Lỗi: "Sách này đã được mượn hết, không còn bản sao khả dụng tại quầy". | Exception | P1 |
+| **TC_09_EX06** | Chặn mượn nếu sách đang bị xếp hàng chờ (Reserve) cho người khác | Sách `B006` có 1 bản duy nhất và đã được `SV005` đặt trước | 1. Quét mã `SV001` (người khác)<br>2. Mượn `B006` | `SV001`, `B006` | Lỗi: "Tài liệu này đang được giữ chỗ cho độc giả khác. Vui lòng chọn tài liệu khác." | Exception | P1 |
+| **TC_09_EX07** | Từ chối mượn cùng 1 đầu sách 2 lần cho cùng 1 độc giả | `SV001` đang mượn `B001` | 1. Quét lại mã `B001` để mượn tiếp bản sao thứ 2 | `SV001`, `B001` | Lỗi: "Độc giả đang mượn tựa sách này rồi, không thể mượn trùng 2 bản sao của cùng 1 đầu sách". | Exception | P2 |
+| **TC_09_EG01** | Kiểm tra xử lý Race Condition khi 2 thủ thư cùng cho mượn cuốn cuối cùng | Sách `B007` chỉ còn `available=1` | 1. Thủ thư A và B cùng lúc submit form mượn cho `SV001` và `SV002` tại cùng 1 mili-giây | N/A | Database Transaction / Row lock sẽ chỉ cho phép 1 request thành công, request còn lại báo lỗi "Hết sách". Số lượng `available` không bao giờ bị âm. | Edge | P1 |
+| **TC_09_EG02** | Xử lý khi Độc giả đặt trước sách đến quá hạn 48h rồi mới lấy | `SV008` đặt sách `B008`, đã qua 49h | 1. `SV008` đến mượn `B008` | `SV008` | Hệ thống kiểm tra thấy Reservation đã `Expired`, sách đã được trả về kệ chung. Nếu sách vẫn còn thì cho mượn, nếu hết thì báo lỗi. | Edge | P2 |
+| **TC_09_EG03** | Mượn sách đúng lúc Cronjob chạy đánh dấu quá hạn | Phiếu mượn cũ của SV009 hết hạn vào 23:59:59 hôm nay | 1. 23:59:59 SV009 đến mượn sách mới | `SV009` | Kiểm tra tính nhất quán giữa lúc kiểm tra quyền (`can_borrow`) và lúc lập phiếu mượn. | Edge | P2 |
+| **TC_09_EG04** | Ngắt kết nối mạng ngay thời điểm bấm Submit | Form đang gửi request | 1. Bấm Submit<br>2. Tắt mạng | N/A | Dữ liệu không bị treo lửng. Khi có mạng lại, request phải tránh bị gửi đúp (nhờ cơ chế vô hiệu hóa nút Submit UI05). | Edge | P3 |
+| **TC_09_EG05** | SQL Injection vào mã vạch | Ô nhập mã sách/độc giả qua máy quét mã vạch | 1. Máy quét mã vạch quét mã chứa ký tự `' OR 1=1; DROP TABLE users;` | Barcode hack | Hệ thống dùng ORM chuẩn (Django) để tham số hóa truy vấn, không dính lỗi SQL Injection. Báo lỗi "Không tìm thấy mã". | Edge | P1 |
 
 ### UC10 – Gia hạn Mượn sách (Renewal — Phân tích Giá trị biên BVA)
 | Mã TC | Tên Test Case / Mục tiêu | Tiền điều kiện | Các bước thực hiện | Input Data | Kết quả mong đợi (Expected Result) | Loại TC | Ưu tiên |
